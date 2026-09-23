@@ -1,3 +1,7 @@
-<? php
+<? php 
+
+$host = 'localhost';
+
+echo $host;
 
 ?>
