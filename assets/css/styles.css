@@ -1,0 +1,29 @@
+body {
+    margin: 0;
+    background-image: radial-gradient(circle, #102234, #0e1f2f, #0d1c2a, #0b1825, #091520);
+    height: 100vh;
+    color: white !important;
+}
+
+.app-container {
+    width: 100%;
+    height: 100%;
+}
+
+.main-content {
+    /* border: 1px solid white; */
+
+}
+
+.poster {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+.poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
