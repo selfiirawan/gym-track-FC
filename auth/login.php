@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="app-container m-0 p-0 d-flex">
         <div class="main-content w-50 h-100 p-4">
-            <div class="">
+            <div>
                 <h3 class="fw-bold fs-4 mb-0">GymTrack</h3>
                 <p class="text-secondary caption">Member & Club Management Portal</p>
             </div>
@@ -92,19 +92,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <!-- login button -->
                     <button type="submit" class="btn bg-white w-100 fw-bold mt-4 login-btn">Log In</button>
                     
+                    <!-- divider -->
                     <div class="divider m-2 d-flex align-items-center">
                         <span class="line"></span>
                         <span class="mx-2 text-secondary">or</span>
                         <span class="line"></span>
                     </div>
 
+                    <!-- login with google -->
                     <button type="submit" class="btn bg-transparent w-100 text-white border-white fw-bold">
                         <img src="./assets/img/google.png" alt="google" width="16px" class="me-2">Log In with Google
                     </button>
-
-                    <p class="text-secondary m-0 mt-5 caption">Don't have an account? <a href="/register" class="text-light">Sign up here</a></p>
-                    <p class="text-secondary caption m-0 mb-3">GymTrack v1.0. Secure club access for GymZ Fitness.</p>
                 </form>
+
+                <p class="text-secondary m-0 mt-5 caption">Don't have an account? <a href="/register" class="text-light">Sign up here</a></p>
+                <p class="text-secondary caption m-0 mb-3">GymTrack v1.0. Secure club access for GymZ Fitness.</p>
             </div>
         </div>
         
