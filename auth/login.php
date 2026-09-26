@@ -45,19 +45,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GymTrack</title>
-    <link rel="stylesheet" href="../assets/css/styles.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="../assets/css/styles.css">
 </head>
 <body>
-    <div class="app-container m-0 p-0 d-flex ">
+    <div class="app-container m-0 p-0 d-flex">
         <div class="main-content w-50 h-100 p-4">
             <div class="">
                 <h3 class="fw-bold fs-4 mb-0">GymTrack</h3>
                 <p class="text-secondary caption">Member & Club Management Portal</p>
             </div>
 
-            <div class="content px-5 pt-4 m-5 <?= $error ? 'mt-3' : '' ?>">
+            <div class="content px-5 pt-4 m-0 mt-5 <?= $error ? 'mt-md-3' : '' ?> m-md-5">
                 <h1 class="fw-bold mb-0">Welcome Back</h1>
                 <p class="text-secondary p-0"><?= htmlspecialchars($greeting) ?></p>
 
@@ -108,7 +107,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </form>
             </div>
         </div>
-
+        
+        <!-- poster -->
         <div class="poster">
             <img src="../assets/img/poster3.png" alt="gym model poster">
         </div>
