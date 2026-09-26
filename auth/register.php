@@ -1,10 +1,10 @@
 <?php
 
-session_start();
+// session_start();
+require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../config/database.php';
 
 $error = '';
-$success = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = $_POST['name'];
@@ -21,12 +21,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
         // insert new member to db
-        $statement = $db->prepare("INSERT INTO users (name, email, password_hash) VALUES (?,?,?)");
+        $statement = $db->prepare("INSERT INTO users (name, email, password_hash, role) VALUES (?,?,?,'member')");
         $statement->execute([$name,$email,$hashedPassword]);
-
-        $success = 'Welcome to the club. Log in to start your journey';
         
-        header('Location: login.php');
+        header('Location: /login?registered=1');
         exit;
     }
 }
@@ -52,8 +50,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h1>Create Your Account</h1>
             <p>Join GymZ and start your journey.</p>
 
+            <?php if ($error) { ?>
+                <p style="color: red;"><?= htmlspecialchars($error) ?></p>
+            <?php } ?>
+
             <!-- the signup form -->
-            <form method="POST" action="/register.php">
+            <form method="POST" action="/register">
                  <!-- name -->
                 <div class="mb-3">
                     <label class="form-label">Full Name</label>
@@ -82,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label class="form-check-label">I agree to the <a href="/">Terms of Service</a> and <a href="/">Privacy Policy</a></label>
                 </div>
 
-                <p>Already have an account? <a href="/register.php">Log in here</a></p>
+                <p>Already have an account? <a href="/login">Log in here</a></p>
             </form>
         </div>
 

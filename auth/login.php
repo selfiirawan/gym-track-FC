@@ -1,7 +1,41 @@
 <?php
 
-session_start();
+// session_start();
+require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../config/database.php';
+
+$error = '';
+$greeting = 'Log in to continue your journey.';
+
+if (isset($_GET['registered'])) {
+    $greeting = 'Welcome to the club. Log in to start your journey';
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    // find user through email
+    $statement = $db->prepare("SELECT * FROM users WHERE email = ?");
+    $statement->execute([$email]);
+    $user = $statement->fetch(PDO::FETCH_ASSOC);
+
+    // verify password
+    if ($user && password_verify($password, $user['password_hash'])) {
+        // storing in user sessions
+        $_SESSION['authenticated'] = true;
+        $_SESSION['user'] = [
+            'id' => $user['user_id'],
+            'email' => $user['email'],
+            'role' => $user['role']
+        ];
+
+        header('Location: /dashboard');
+        exit;
+    } else {
+        $error = 'Invalid email or password';
+    }
+}
 
 ?>
 
@@ -17,45 +51,51 @@ require_once __DIR__ . '/../config/database.php';
 </head>
 <body>
     <div class="app-container m-0 p-0 d-flex ">
-        <div class="main-content w-50 h-100 p-5">
-            <h3>GymTrack</h3>
-            <p>Member & Club Management Portal</p>
+        <div class="main-content w-50 h-100 p-4">
+            <h3 class="fw-bold">GymTrack</h3>
+            <p class="text-secondary">Member & Club Management Portal</p>
 
-            <h1>Welcome Back</h1>
-            <p>Log in to continue your journey.</p>
+            <div class="content p-5 pt-4 mx-5 mt-5">
+                <h1 class="fw-bold">Welcome Back</h1>
+                <p class="text-secondary"><?= htmlspecialchars($greeting) ?></p>
 
-            <!-- the login form -->
-            <form method="POST" action="/login.php">
-                <!-- email -->
-                <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <input type="email" class="form-control" name="email" placeholder="john.doe@gmail.com" required>
-                </div>
+                <?php if ($error): ?>
+                    <p style="color: red;"><?= htmlspecialchars($error) ?></p>
+                <?php endif; ?>
 
-                <!-- password -->
-                <div class="mb-3">
-                    <label class="form-label">Password</label>
-                    <input type="password" class="form-control" name="password" placeholder="●●●●●●●" required>
-                </div>
-
-                <!-- remember me and forget password -->
-                <div class="d-flex justify-content-between">
-                    <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input">
-                        <label class="form-check-label">Remember me</label>
+                <!-- the login form -->
+                <form method="POST" action="/login">
+                    <!-- email -->
+                    <div class="mb-3 mt-5">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" name="email" placeholder="john.doe@gmail.com" required>
                     </div>
 
-                    <a href="/">Forgot password?</a>
-                </div>
+                    <!-- password -->
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-control" name="password" placeholder="●●●●●●●" required>
+                    </div>
 
-                <!-- login button -->
-                <button type="submit" class="btn btn-primary">Log In</button>
-                <p>or</p>
-                <button type="submit" class="btn btn-primary">Log In with Google</button>
+                    <!-- remember me and forget password -->
+                    <div class="d-flex justify-content-between">
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input checkbox">
+                            <label class="form-check-label">Remember me</label>
+                        </div>
 
-                <p>Don't have an account? <a href="/register.php">Sign up here</a></p>
-                <p>GymTrack v1.0. Secure club access for GymZ Fitness.</p>
-            </form>
+                        <a href="/" class="text-secondary">Forgot password?</a>
+                    </div>
+
+                    <!-- login button -->
+                    <button type="submit" class="btn btn-primary">Log In</button>
+                    <p>or</p>
+                    <button type="submit" class="btn btn-primary">Log In with Google</button>
+
+                    <p>Don't have an account? <a href="/register">Sign up here</a></p>
+                    <p>GymTrack v1.0. Secure club access for GymZ Fitness.</p>
+                </form>
+            </div>
         </div>
 
         <div class="poster">

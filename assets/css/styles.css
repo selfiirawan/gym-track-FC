@@ -1,6 +1,7 @@
 body {
     margin: 0;
     background-image: radial-gradient(circle, #102234, #0e1f2f, #0d1c2a, #0b1825, #091520);
+    background-color: black !important;
     height: 100vh;
     color: white !important;
 }
@@ -10,9 +11,13 @@ body {
     height: 100%;
 }
 
-.main-content {
+.main-content, .content {
     /* border: 1px solid white; */
+}
 
+.content {
+    box-shadow: 1px 8px 10px 10px rgba(0,0,0,0.4);
+    border-radius: 10px;
 }
 
 .poster {
@@ -26,4 +31,18 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
+}
+
+.form-control {
+    background-color: transparent !important;
+    height: 50px;
+    border-radius: 10px !important;
+}
+
+input::placeholder {
+    color: gray !important;
+}
+
+.checkbox {
+    background-color: transparent !important;
 }

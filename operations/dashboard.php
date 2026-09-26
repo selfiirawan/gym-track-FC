@@ -18,5 +18,8 @@ if (!isset($_SESSION['user'])) {
 </head>
 <body>
     <h1>Hello, Admin</h1>
+    <h3>Welcome to your first dashboard</h3>
+
+    <a href="auth/login.php">Log Out</a>
 </body>
 </html>

@@ -61,3 +61,15 @@ CREATE TABLE checkins (
     checkin_time DATETIME DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_checkin_member FOREIGN KEY (member_id) REFERENCES members(member_id)
 );
+
+INSERT INTO users (name, email, password_hash, role) VALUES
+('Admin 1', 'admin@mail.com', '$2y$12$rMr2ZO8wAFuIKqUscAIMUuwBtzhj1zUnQFV.8iLxhGikD93I5HSOm', 'admin');
+
+INSERT INTO users (name, email, password_hash, role) VALUES
+('Staff 1', 'staff@mail.com', '$2y$12$rMr2ZO8wAFuIKqUscAIMUuwBtzhj1zUnQFV.8iLxhGikD93I5HSOm', 'staff'),
+('Member 1', 'member@mail.com', '$2y$12$rMr2ZO8wAFuIKqUscAIMUuwBtzhj1zUnQFV.8iLxhGikD93I5HSOm', 'member');
+
+
+SELECT * FROM users;
+
+

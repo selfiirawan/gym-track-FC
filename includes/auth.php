@@ -1,6 +1,7 @@
 <?php
-
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // user role = 'admin';
 function isAdmin() {
@@ -12,7 +13,7 @@ function isAdmin() {
     return false;
 }
 
-// user role = 'staff' 
+// user role = 'staff' & 'admin'
 function isStaff() {
     if (isset($_SESSION['user'])) {
         if ($_SESSION['user']['role'] === 'staff' ||
