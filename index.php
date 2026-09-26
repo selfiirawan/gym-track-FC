@@ -7,8 +7,7 @@ $path = trim($_SERVER['REQUEST_URI'], '/');
 $path = parse_url($path, PHP_URL_PATH);
 
 switch ($path) {
-    case '';
-
+    case '':
     case 'login':
         include 'auth/login.php';
         break;
@@ -19,10 +18,14 @@ switch ($path) {
 
     case 'dashboard':
         if (isGuest()) {
-            header('Location: login');
+            header('Location: /login');
             exit;
         }
         include 'operations/dashboard.php';
+        break;
+
+    case 'logout':
+        include 'auth/logout.php';
         break;
 
     default:

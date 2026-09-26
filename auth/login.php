@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: /dashboard');
         exit;
     } else {
-        $error = 'Invalid email or password';
+        $error = 'Invalid email or password!';
     }
 }
 
@@ -52,21 +52,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="app-container m-0 p-0 d-flex ">
         <div class="main-content w-50 h-100 p-4">
-            <h3 class="fw-bold">GymTrack</h3>
-            <p class="text-secondary">Member & Club Management Portal</p>
+            <div class="">
+                <h3 class="fw-bold fs-4 mb-0">GymTrack</h3>
+                <p class="text-secondary caption">Member & Club Management Portal</p>
+            </div>
 
-            <div class="content p-5 pt-4 mx-5 mt-5">
-                <h1 class="fw-bold">Welcome Back</h1>
-                <p class="text-secondary"><?= htmlspecialchars($greeting) ?></p>
+            <div class="content px-5 pt-4 m-5 <?= $error ? 'mt-3' : '' ?>">
+                <h1 class="fw-bold mb-0">Welcome Back</h1>
+                <p class="text-secondary p-0"><?= htmlspecialchars($greeting) ?></p>
 
+                <!-- if email/pass didn't match -->
                 <?php if ($error): ?>
-                    <p style="color: red;"><?= htmlspecialchars($error) ?></p>
+                    <p class="alert alert-dark"><?= htmlspecialchars($error) ?></p>
                 <?php endif; ?>
 
                 <!-- the login form -->
                 <form method="POST" action="/login">
                     <!-- email -->
-                    <div class="mb-3 mt-5">
+                    <div class="mb-3 mt-4">
                         <label class="form-label">Email</label>
                         <input type="email" class="form-control" name="email" placeholder="john.doe@gmail.com" required>
                     </div>
@@ -88,18 +91,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
 
                     <!-- login button -->
-                    <button type="submit" class="btn btn-primary">Log In</button>
-                    <p>or</p>
-                    <button type="submit" class="btn btn-primary">Log In with Google</button>
+                    <button type="submit" class="btn bg-white w-100 fw-bold mt-4 login-btn">Log In</button>
+                    
+                    <div class="divider m-2 d-flex align-items-center">
+                        <span class="line"></span>
+                        <span class="mx-2 text-secondary">or</span>
+                        <span class="line"></span>
+                    </div>
 
-                    <p>Don't have an account? <a href="/register">Sign up here</a></p>
-                    <p>GymTrack v1.0. Secure club access for GymZ Fitness.</p>
+                    <button type="submit" class="btn bg-transparent w-100 text-white border-white fw-bold">
+                        <img src="./assets/img/google.png" alt="google" width="16px" class="me-2">Log In with Google
+                    </button>
+
+                    <p class="text-secondary m-0 mt-5 caption">Don't have an account? <a href="/register" class="text-light">Sign up here</a></p>
+                    <p class="text-secondary caption m-0 mb-3">GymTrack v1.0. Secure club access for GymZ Fitness.</p>
                 </form>
             </div>
         </div>
 
         <div class="poster">
-            <img src="../assets/img/poster.png" alt="gym model poster">
+            <img src="../assets/img/poster3.png" alt="gym model poster">
         </div>
     </div>
 

@@ -1,6 +1,6 @@
 body {
     margin: 0;
-    background-image: radial-gradient(circle, #102234, #0e1f2f, #0d1c2a, #0b1825, #091520);
+    /* background-image: radial-gradient(circle, #102234, #0e1f2f, #0d1c2a, #0b1825, #091520); */
     background-color: black !important;
     height: 100vh;
     color: white !important;
@@ -11,12 +11,22 @@ body {
     height: 100%;
 }
 
-.main-content, .content {
+.content p, form, .content{
     /* border: 1px solid white; */
 }
 
+.main-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.caption {
+    font-size: 13px;
+}
+
 .content {
-    box-shadow: 1px 8px 10px 10px rgba(0,0,0,0.4);
+    box-shadow: 0 8px 30px rgba(255, 255, 255, 0.30);
     border-radius: 10px;
 }
 
@@ -37,6 +47,12 @@ body {
     background-color: transparent !important;
     height: 50px;
     border-radius: 10px !important;
+    color: white !important;
+}
+
+.form-control:focus, .checkbox:focus {
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1) !important;
 }
 
 input::placeholder {
@@ -45,4 +61,20 @@ input::placeholder {
 
 .checkbox {
     background-color: transparent !important;
+}
+
+.content button {
+    height: 50px;
+}
+
+.line {
+    flex: 1;
+    background-color: gray;
+    height: 1px;
+}
+
+.login-btn:hover {
+    color: gray !important;
+    background-color: rgba(0, 0, 0, 0.137) !important;
+    border: 1px solid white !important;
 }
