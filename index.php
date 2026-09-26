@@ -21,7 +21,12 @@ switch ($path) {
             header('Location: /login');
             exit;
         }
-        include 'operations/dashboard.php';
+
+        if (isMember()) {
+            include 'members/dashboard.php';
+        } else {
+            include 'operations/dashboard.php';
+        }
         break;
 
     case 'logout':
@@ -29,6 +34,6 @@ switch ($path) {
         break;
 
     default:
-        include 'auth/login.php';
+        include '404.php';
         break;
 }

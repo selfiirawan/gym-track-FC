@@ -22,7 +22,7 @@ if (isGuest()) {
         <?php include __DIR__ . '/../includes/sidebar.php'; ?>
 
         <div>
-            <h1>Hello, Admin</h1>
+            <h1>Hello, Member</h1>
             <h3>Welcome to your first dashboard</h3>
         </div>
     </div>
