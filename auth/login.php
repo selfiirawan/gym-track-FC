@@ -27,7 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['user'] = [
             'id' => $user['user_id'],
             'email' => $user['email'],
-            'role' => $user['role']
+            'role' => $user['role'],
+            'name' => $user['name']
         ];
 
         header('Location: /dashboard');

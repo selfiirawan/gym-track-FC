@@ -8,6 +8,8 @@ if (isGuest()) {
     exit;
 }
 
+preventCaching();
+
 ?>
 
 <!DOCTYPE html>
@@ -22,13 +24,13 @@ if (isGuest()) {
         <?php include __DIR__ . '/../includes/sidebar.php'; ?>
 
         <div>
-            <h1>Hello, Member</h1>
+            <h1>Hello, <?= htmlspecialchars($_SESSION['user']['name'] ?? '') ?></h1>
             <h3>Welcome to your first dashboard</h3>
         </div>
     </div>
 
    
 
-    <a href="/login">Log Out</a>
+    <a href="/logout">Log Out</a>
 </body>
 </html>
