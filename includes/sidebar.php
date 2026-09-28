@@ -9,28 +9,111 @@
 ?>
 
 <div class="sidebar d-flex flex-column">
-    <p>GymZ <?= htmlspecialchars($role) ?></p>
+    <div class="role">
+        <p>GymZ <?= htmlspecialchars($role) ?></p>
+    </div>
 
-    <!-- staff & admin -->
-    <?php if (isStaff()): ?>
-        <a href="/dashboard">Dashboard</a>
-        <a href="/members">Members</a>
-        <a href="/checkin">Check-In</a>
-        <a href="/payments">Payment</a>
-        <a href="/classes">Class Timetable</a>
-    <?php endif; ?>
-    
-    <!-- member only -->
-    <?php if (isMember()): ?>
-        <a href="/dashboard">My Dashboard</a>
-        <a href="/classes">Class Timetable</a>
-        <a href="/member/history">My History</a>
-    <?php endif; ?>
+    <ul>
+        <!-- staff & admin -->
+        <?php if (isStaff()): ?>
+            <li>
+                <a href="/dashboard">
+                    <i class="bi bi-columns-gap"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
 
-    <?php if (isAdmin()): ?>
-        <a href="/admin/plans">Plans</a>
-        <a href="/admin/classes">Classes</a>
-        <a href="/admin/staff">Staff</a>
-        <a href="/admin/reports">Reports</a>
-    <?php endif; ?>
+            <li>
+                <a href="/members">
+                    <i class="bi bi-people"></i>
+                    <span>Members</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="/checkin">
+                    <i class="bi bi-clipboard2-check"></i>
+                    <span>Check-In</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="/payments">
+                    <i class="bi bi-cash-stack"></i>
+                    <span>Payment</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="/classes">
+                    <i class="bi bi-calendar3"></i>
+                    <span>Class Timetable</span>
+                </a>
+            </li>
+        <?php endif; ?>
+        
+        <!-- member only -->
+        <?php if (isMember()): ?>
+            <li>
+                <a href="/dashboard">
+                    <i class="bi bi-columns-gap"></i>
+                    <span>My Dashboard</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="/classes">
+                    <i class="bi bi-calendar"></i>
+                    <span>Class Timetable</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="/member/history">
+                    <i class="bi bi-clock-history"></i>
+                    <span>My History</span>
+                </a>
+            </li>
+        <?php endif; ?>
+
+        <!-- visible in admin only -->
+        <?php if (isAdmin()): ?>
+            <li>
+                <a href="/admin/plans">
+                    <i class="bi bi-credit-card"></i>
+                    <span>Plans</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="/admin/classes">
+                    <i class="bi bi-calendar-plus"></i>
+                    <span>Classes</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="/admin/staff">
+                    <i class="bi bi-person-badge"></i>
+                    <span>Staff</span>
+                </a>
+            </li>
+            
+            <li>
+                <a href="/admin/reports">
+                    <i class="bi bi-bar-chart-line"></i>
+                    <span>Reports</span>
+                </a>
+            </li>
+        <?php endif; ?>
+
+        <li>
+            
+        </li>
+    </ul>
+
+    <a href="/logout" class="logout">
+        <i class="bi bi-box-arrow-right"></i>
+        <span>Log Out</span>
+    </a>
 </div>

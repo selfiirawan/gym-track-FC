@@ -28,9 +28,5 @@ preventCaching();
             <h3>Welcome to your first dashboard</h3>
         </div>
     </div>
-
-   
-
-    <a href="/logout">Log Out</a>
 </body>
 </html>
