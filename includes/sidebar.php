@@ -8,12 +8,13 @@
     $role = $roleLabel[$_SESSION['user']['role']] ?? 'Guest';
 ?>
 
-<div class="sidebar d-flex flex-column">
-    <div class="role">
-        <p>GymZ <?= htmlspecialchars($role) ?></p>
-    </div>
+<div class="sidebar p-3 d-flex flex-column position-sticky top-0 left-0 bottom-0">
+    <div class="role d-flex">
+        <img src="../assets/img/logo.png" alt="GT logo" width="50px">
+        <p class="fw-bold h-100 align-content-center px-1">GymZ <?= htmlspecialchars($role) ?></p>
+    </div><hr>
 
-    <ul>
+    <ul class="px-3 h-100">
         <!-- staff & admin -->
         <?php if (isStaff()): ?>
             <li>
@@ -111,8 +112,10 @@
             
         </li>
     </ul>
-
-    <a href="/logout" class="logout">
+    
+    <hr class="mt-auto">
+    
+    <a href="/logout" class="logout p-2 px-4">
         <i class="bi bi-box-arrow-right"></i>
         <span>Log Out</span>
     </a>

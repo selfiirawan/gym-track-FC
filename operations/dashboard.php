@@ -26,7 +26,11 @@ preventCaching();
     <div class="d-flex min-vh-100">
         <?php include __DIR__ . '/../includes/sidebar.php'; ?>
 
-        <div class="">
+        <div class="main-content flex-grow-1">
+            <div class="">
+
+            </div>
+
             <h1>Hello, <?= htmlspecialchars($_SESSION['user']['name'] ?? '') ?></h1>
             <h3>Welcome to your first dashboard</h3>
         </div>
