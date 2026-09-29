@@ -10,6 +10,24 @@ if (isGuest()) {
 
 preventCaching();
 
+// total members
+$totalMembers = $db->query("SELECT COUNT(*) FROM members")->fetchColumn();
+
+// active member
+$activeMembers = $db->query("SELECT COUNT(*) FROM members WHERE expiry_date >= CURDATE()")->fetchColumn();
+
+// monthly revenue
+$monthlyRevenue = $db->query("
+    SELECT SUM(amount) FROM payments
+    WHERE MONTH(payment_date) = MONTH(CURDATE())
+    AND YEAR(payment_date) = YEAR(CURDATE())
+")->fetchColumn();
+
+$monthlyRevenue = $monthlyRevenue ?? 0;
+
+// today's check-ins
+$checkIns = $db->query("SELECT COUNT(*) FROM checkins WHERE DATE(checkin_time) = CURDATE()")->fetchColumn();
+
 ?>
 
 <!DOCTYPE html>
@@ -29,13 +47,13 @@ preventCaching();
 
         <!-- MAIN CONTENT -->
         <div class="main-content flex-grow-1">
-            <!-- navbar -->
+            <!-- NAVBAR -->
             <?php include __DIR__ . '/../includes/navbar.php' ?>
 
             <!-- main content -->
-            <div class="content">
+            <div class="content px-4">
                 <!-- header -->
-                <div class="header d-flex justify-content-between p-3 px-4 pb-0">
+                <div class="header d-flex justify-content-between p-3 pb-0 mb-3">
                     <div class="greeting">
                         <h3>Hello, <?= htmlspecialchars($_SESSION['user']['name'] ?? '') ?></h3>
                         <p>Here's what's happening today</p>
@@ -57,6 +75,74 @@ preventCaching();
                             <span>Record Payment</span>
                         </a>
                     </div>
+                </div>
+
+                <!-- stat cards -->
+                <div class="stat-cards my-5 px-2">
+                    <div class="cards total-member">
+                        <i class="bi bi-people"></i>
+                        <p class="stat-label">Total Members</p>
+                        <p class="stat-value"><?= htmlspecialchars($totalMembers) ?></p>
+                    </div>
+
+                    <div class="cards active-member">
+                        <i class="bi bi-person-check"></i>
+                        <p class="stat-label">Active Memberships</p>
+                        <p class="stat-value"><?= htmlspecialchars($activeMembers) ?></p>
+                    </div>
+
+                    <div class="cards revenue">
+                        <i class="bi bi-currency-dollar"></i>
+                        <p class="stat-label">Monthly Revenue</p>
+                        <p class="stat-value"><?= htmlspecialchars(number_format($monthlyRevenue, 2)) ?></p>
+                    </div>
+
+                    <div class="cards daily-checkin">
+                        <i class="bi bi-calendar2-check"></i>
+                        <p class="stat-label">Today's Check-ins</p>
+                        <p class="stat-value"><?= htmlspecialchars($checkIns) ?></p>
+                    </div>
+                </div>
+
+                <!-- recent members -->
+                <div class="recent-members mx-2">
+                    <div class="table-title d-flex justify-content-between p-3">
+                        <p class="fw-bold fs-5 align-content-center">Recent Members</p>
+                        <a href="/members?action=new" class="align-content-center p-2 px-3">
+                            <i class="bi bi-plus"></i> Add Member
+                        </a>
+                    </div>
+
+                    <table class="table-dark table">
+                        <thead>
+                            <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">First</th>
+                            <th scope="col">Last</th>
+                            <th scope="col">Handle</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                            <th scope="row">1</th>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td>@mdo</td>
+                            </tr>
+                            <tr>
+                            <th scope="row">2</th>
+                            <td>Jacob</td>
+                            <td>Thornton</td>
+                            <td>@fat</td>
+                            </tr>
+                            <tr>
+                            <th scope="row">3</th>
+                            <td>John</td>
+                            <td>Doe</td>
+                            <td>@social</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

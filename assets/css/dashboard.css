@@ -2,11 +2,6 @@
 #0f121b
 #404040 */
 
-
-.header, .greeting, .quick-btn, .content, .quick-btn a{
-    /* border: 1px solid black; */
-}
-
 a {
     text-decoration: none;
 }
@@ -119,6 +114,7 @@ body {
     font-size: 13px;
 }
 
+
 /* header */
 .greeting h3, .greeting p {
     margin: 0;
@@ -126,7 +122,7 @@ body {
 
 .greeting h3 {
     font-weight: bold;
-    font-size: 1.5rem;
+    font-size: 2rem;
 }
 
 .greeting p {
@@ -151,4 +147,54 @@ body {
 
 .quick-btn a:hover span, .quick-btn a:hover i {
     color: #FFFFFF;
+}
+
+
+/* stat cards */
+.stat-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 20px;
+}
+
+.cards {
+    border-radius: 10px;
+    background-color: #000;
+    color: #FFFFFF;
+    padding: 1rem 1.3rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.stat-value {
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+.stat-label {
+    margin-top: 13px;
+}
+
+.cards .bi {
+    font-size: 1.3rem;
+}
+
+
+/* recent members */
+.recent-members {
+    border: 1px solid black;
+    color: #FFFFFF;
+    background-color: #000;
+}
+
+.table-title p, .table-title a {
+    /* border: 1px solid white; */
+    margin: 0;
+}
+
+.recent-members a {
+    color: #000;
+    background-color: #FFFFFF;
+    font-weight: bold;
+    border-radius: 20px;
 }
