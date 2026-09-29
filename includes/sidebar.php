@@ -109,7 +109,10 @@
         <?php endif; ?>
 
         <li>
-            
+            <a href="#">
+                <i class="bi bi-gear"></i>
+                <span>Settings</span>
+            </a>
         </li>
     </ul>
     

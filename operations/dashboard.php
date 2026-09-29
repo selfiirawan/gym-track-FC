@@ -24,13 +24,45 @@ preventCaching();
 </head>
 <body>
     <div class="d-flex min-vh-100">
+        <!-- SIDEBAR -->
         <?php include __DIR__ . '/../includes/sidebar.php'; ?>
 
+        <!-- MAIN CONTENT -->
         <div class="main-content flex-grow-1">
-            <div class="">
+            <!-- navbar -->
+            <div class="content-navbar d-flex justify-content-between align-items-center">
+                <form class="d-flex h-100">
+                    <i class="bi bi-search m-0 p-0"></i>
+                    <input type="search" class="form-control m-0 p-0" placeholder="Search...">
+                </form>
 
+                <div class="m-0 p-0 d-flex align-items-center">
+                    <a href="#" class="m-0 p-0">
+                        <i class="bi bi-bell m-0 p-0"></i>
+                        <!-- add circle if there's notif -->
+                    </a>
+
+                    <!-- dropdown here -->
+                    <div class="m-0 p-0 d-flex">
+                        <!-- user image -->
+                        <button class="btn dropdown-toggle d-flex align-items-center m-0 p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle m-0 p-0"></i> <!-- temporary -->
+
+                            <div class="user-role">
+                                <p><?= htmlspecialchars($_SESSION['user']['name'] ?? '') ?></p>
+                                <p><?= htmlspecialchars($_SESSION['user']['role'] ?? 'Guest') ?></p>
+                            </div>
+                        </button>
+                        
+                        <ul class="dropdown-menu">
+                            <li><a href="#" class="dropdown-item">Profile</a></li>
+                            <li><a href="/logout" class="dropdown-item">Log Out</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
+            <!-- main content -->
             <h1>Hello, <?= htmlspecialchars($_SESSION['user']['name'] ?? '') ?></h1>
             <h3>Welcome to your first dashboard</h3>
         </div>

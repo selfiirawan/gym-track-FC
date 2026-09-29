@@ -3,8 +3,8 @@
 #404040 */
 
 
-div, img, p, ul, a, li {
-    /* border: 1px solid white; */
+div, img, p, ul, a, li, .content-navbar, .content-navbar i, .content-navbar form {
+    border: 1px solid white;
 }
 
 a {
@@ -17,6 +17,7 @@ body {
     padding: 0;
     box-sizing: border-box;
     background-color: #000;
+    color: #FFFFFF;
 }
 
 .role p {
@@ -30,6 +31,7 @@ body {
     overflow: hidden;
     transition: all 0.5s linear;
     border-right: 1px solid #404040;
+    /* border-top-right-radius: 20px; */
 }
 
 .sidebar ul{
@@ -58,8 +60,7 @@ body {
     border-left: 5px solid gray;
 }
 
-.sidebar a:hover span,
-.sidebar a:hover i {
+.sidebar a:hover span, .sidebar a:hover i {
     color: #27262a;
 }
 
@@ -76,4 +77,10 @@ body {
 /* === MAIN CONTENT === */
 .main-content {
     min-width: 0;
+}
+
+/* navbar */
+.user-role p {
+    margin: 0;
+    padding: 0;
 }
