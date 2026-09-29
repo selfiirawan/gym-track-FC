@@ -3,8 +3,8 @@
 #404040 */
 
 
-.header, .greeting, .quick-btn {
-    border: 1px solid black;
+.header, .greeting, .quick-btn, .content, .quick-btn a{
+    /* border: 1px solid black; */
 }
 
 a {
@@ -83,6 +83,7 @@ body {
 .user-role p {
     margin: 0;
     padding: 0;
+    line-height: 1.2;
 }
 
 .bi-bell {
@@ -121,4 +122,33 @@ body {
 /* header */
 .greeting h3, .greeting p {
     margin: 0;
+}
+
+.greeting h3 {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.greeting p {
+    font-size: 1rem;
+}
+
+.quick-btn span, .quick-btn i {
+    font-size: 1rem;
+}
+
+.quick-btn a {
+    padding: 5px 8px;
+    border: 2px solid black;
+    border-radius: 5px;
+    color: #000;
+}
+
+.quick-btn a:hover {
+    background-color: #27262a;
+    color: white;
+}
+
+.quick-btn a:hover span, .quick-btn a:hover i {
+    color: #FFFFFF;
 }

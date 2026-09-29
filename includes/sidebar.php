@@ -12,7 +12,7 @@
     <div class="role d-flex mb-2">
         <img src="../assets/img/logo.png" alt="GT logo" width="50px">
         <p class="fw-bold h-100 align-content-center px-1">GymZ <?= htmlspecialchars($role) ?></p>
-    </div><hr>
+    </div><hr class="m-0">
 
     <ul class="px-3 h-100">
         <!-- staff & admin -->

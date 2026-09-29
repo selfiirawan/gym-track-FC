@@ -33,27 +33,30 @@ preventCaching();
             <?php include __DIR__ . '/../includes/navbar.php' ?>
 
             <!-- main content -->
-            <div class="header d-flex justify-content-between p-3 px-4">
-                <div class="greeting">
-                    <h3>Hello, <?= htmlspecialchars($_SESSION['user']['name'] ?? '') ?></h3>
-                    <p>Here's what's happening today</p>
-                </div>
+            <div class="content">
+                <!-- header -->
+                <div class="header d-flex justify-content-between p-3 px-4 pb-0">
+                    <div class="greeting">
+                        <h3>Hello, <?= htmlspecialchars($_SESSION['user']['name'] ?? '') ?></h3>
+                        <p>Here's what's happening today</p>
+                    </div>
 
-                <div class="quick-btn align-content-end">
-                    <a href="/members">
-                        <i class="bi bi-person-add"></i>
-                        <span>Register Member</span>
-                    </a>
+                    <div class="quick-btn align-content-end">
+                        <a href="/members" class="me-3">
+                            <i class="bi bi-person-add me-1"></i>
+                            <span>Register Member</span>
+                        </a>
 
-                    <a href="/checkin">
-                        <i class="bi bi-clipboard2-check"></i>
-                        <span>Log Check-in</span>
-                    </a>
+                        <a href="/checkin" class="me-3">
+                            <i class="bi bi-clipboard2-check me-1"></i>
+                            <span>Log Check-in</span>
+                        </a>
 
-                    <a href="/payments">
-                        <i class="bi bi-cash-stack"></i>
-                        <span>Record Payment</span>
-                    </a>
+                        <a href="/payments">
+                            <i class="bi bi-cash-stack me-1"></i>
+                            <span>Record Payment</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

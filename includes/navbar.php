@@ -1,10 +1,10 @@
-<div class="content-navbar d-flex justify-content-between align-items-center p-1 pb-0">
-    <form class="d-flex align-items-center gap-2 h-100 ms-3 w-25 p-3">
+<div class="content-navbar d-flex justify-content-between align-items-center pt-2">
+    <form action="/members" method="GET" class="d-flex align-items-center gap-2 h-100 ms-3 w-25 p-3 pb-0 search-form">
         <i class="bi bi-search m-0 p-0"></i>
-        <input type="search" class="form-control text-dark m-0 p-1 ps-3 bg-transparent" placeholder="Search...">
+        <input type="search" name="q" class="form-control text-dark m-0 p-1 ps-3 bg-transparent" placeholder="Search...">
     </form>
 
-    <div class="d-flex align-items-center">
+    <div class="d-flex align-items-center right-nav">
         <!-- <a href="#" class="">
             <i class="bi bi-bell me-2 p-0"></i>
             === add circle if there's notif ===
@@ -12,7 +12,7 @@
         </a> -->
 
         <!-- dropdown here -->
-        <div class="m-0 p-0 d-flex">
+        <div class=" p-0 pb-0 d-flex dropdown">
             <!-- user image -->
             <button class="btn dropdown-toggle d-flex align-items-center mx-3" type="button" data-bs-toggle="dropdown" aria-expanded="false">
 
@@ -35,3 +35,4 @@
         </div>
     </div>
 </div>
+<hr class="mt-2">

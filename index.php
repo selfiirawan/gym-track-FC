@@ -23,10 +23,14 @@ switch ($path) {
         }
 
         if (isMember()) {
-            include 'members/dashboard.php';
+            include 'member/dashboard.php';
         } else {
             include 'operations/dashboard.php';
         }
+        break;
+
+    case 'members':
+        include 'operations/members.php';
         break;
 
     case 'logout':
