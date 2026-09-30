@@ -1,4 +1,9 @@
+<?php
 
+// to add new member
+$showAddForm = isset($_GET['action']) && $_GET['action'] === 'new';
+
+?>
 
 <!DOCTYPE html>
 <html lang="en">

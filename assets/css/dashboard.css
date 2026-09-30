@@ -182,9 +182,12 @@ body {
 
 /* recent members */
 .recent-members {
-    border: 1px solid black;
+    /* border: 1px solid black; */
+    border-radius: 10px;
     color: #FFFFFF;
     background-color: #000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
 }
 
 .table-title p, .table-title a {
@@ -197,4 +200,27 @@ body {
     background-color: #FFFFFF;
     font-weight: bold;
     border-radius: 20px;
+}
+
+.recent-members-table, thead, th {
+    /* border: 1px solid white; */
+}
+
+.recent-members-table th, .recent-members-table td {
+    padding: 17px;
+    border-bottom: 1px solid #404040;
+} 
+
+.recent-members-table .plan, .recent-members-table .join {
+    font-size: 0.9rem;
+}
+
+.badge-active {
+    background-color: #aede9e;
+    color: #30720a;
+}
+
+.badge-expired {
+    background-color: #f49ea4;
+    color: #9e1c25;
 }

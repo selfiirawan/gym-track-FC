@@ -28,6 +28,15 @@ $monthlyRevenue = $monthlyRevenue ?? 0;
 // today's check-ins
 $checkIns = $db->query("SELECT COUNT(*) FROM checkins WHERE DATE(checkin_time) = CURDATE()")->fetchColumn();
 
+// recent members
+$recentMembers = $db->query("
+    SELECT m.member_id, m.name, m.join_date, p.plan_name, m.expiry_date
+    FROM members m
+    JOIN membership_plans p ON m.plan_id = p.plan_id
+    ORDER BY m.join_date DESC
+    LIMIT 5
+")->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <!DOCTYPE html>
@@ -81,25 +90,25 @@ $checkIns = $db->query("SELECT COUNT(*) FROM checkins WHERE DATE(checkin_time) =
                 <div class="stat-cards my-5 px-2">
                     <div class="cards total-member">
                         <i class="bi bi-people"></i>
-                        <p class="stat-label">Total Members</p>
+                        <p class="stat-label text-secondary">Total Members</p>
                         <p class="stat-value"><?= htmlspecialchars($totalMembers) ?></p>
                     </div>
 
                     <div class="cards active-member">
                         <i class="bi bi-person-check"></i>
-                        <p class="stat-label">Active Memberships</p>
+                        <p class="stat-label text-secondary">Active Memberships</p>
                         <p class="stat-value"><?= htmlspecialchars($activeMembers) ?></p>
                     </div>
 
                     <div class="cards revenue">
                         <i class="bi bi-currency-dollar"></i>
-                        <p class="stat-label">Monthly Revenue</p>
+                        <p class="stat-label text-secondary">Monthly Revenue</p>
                         <p class="stat-value"><?= htmlspecialchars(number_format($monthlyRevenue, 2)) ?></p>
                     </div>
 
                     <div class="cards daily-checkin">
                         <i class="bi bi-calendar2-check"></i>
-                        <p class="stat-label">Today's Check-ins</p>
+                        <p class="stat-label text-secondary">Today's Check-ins</p>
                         <p class="stat-value"><?= htmlspecialchars($checkIns) ?></p>
                     </div>
                 </div>
@@ -113,34 +122,36 @@ $checkIns = $db->query("SELECT COUNT(*) FROM checkins WHERE DATE(checkin_time) =
                         </a>
                     </div>
 
-                    <table class="table-dark table">
-                        <thead>
+                    <table class="recent-members-table w-100">
+                        <thead class="text-secondary">
                             <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">First</th>
-                            <th scope="col">Last</th>
-                            <th scope="col">Handle</th>
+                                <th>Member</th>
+                                <th>Plan</th>
+                                <th>Joined</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
-                            </tr>
-                            <tr>
-                            <th scope="row">2</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                            </tr>
-                            <tr>
-                            <th scope="row">3</th>
-                            <td>John</td>
-                            <td>Doe</td>
-                            <td>@social</td>
-                            </tr>
+                            <?php if (empty($recentMembers)): ?>
+                                <tr>
+                                    <td colspan="4" class="text-center text-secondary py-4">No members yet</td>
+                                </tr>
+                            <?php else: ?>
+                                <?php foreach ($recentMembers as $member):
+                                    $isActive = strtotime($member['expiry_date']) >= strtotime('today');
+                                ?>
+                                    <tr>
+                                        <td><?= htmlspecialchars($member['name']) ?></td>
+                                        <td class="text-secondary plan"><?= htmlspecialchars($member['plan_name']) ?></td>
+                                        <td class="text-secondary join"><?= htmlspecialchars(date('d-m-Y', strtotime($member['expiry_date']))) ?></td>
+                                        <td>
+                                            <span class="badge rounded-pill <?= $isActive ? 'badge-active' : 'badge-expired' ?>">
+                                                <?= $isActive ? 'Active' : 'Expired' ?>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>

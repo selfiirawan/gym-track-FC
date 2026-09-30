@@ -41,19 +41,22 @@ The backend part was confusing. I wasn't sure how to write the logic so that eac
 
 ---
 
-## Day 2 — Date: ____
+## Day 2 — Date: 29/09/2026
 
 ### What I planned to do today
-
+Finish the navbar and start on the main content.
 
 ### What I actually did
-
+- Completed the navbar, except the search bar. It doesn't work yet; I'll build it when I start the `members.php` file.
+- Completed the 4 stat cards.
 
 ### Blockers / Challenges
-
+- Mostly CSS issues.
+- The stat cards were harder than expected because of the PHP and SQL logic.
 
 ### What I learned
-
+- The difference between `query()` and `prepare()`/`execute()`, and when to use each.
+- How `fetchColumn()` works.
 
 ---
 
