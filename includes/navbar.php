@@ -1,4 +1,5 @@
 <div class="content-navbar d-flex justify-content-between align-items-center pt-2">
+    <!-- search bar -->
     <form action="/members" method="GET" class="d-flex align-items-center gap-2 h-100 ms-3 w-25 p-3 pb-0 search-form">
         <i class="bi bi-search m-0 p-0"></i>
         <input type="search" name="q" class="form-control text-dark m-0 p-1 ps-3 bg-transparent" placeholder="Search...">
@@ -35,4 +36,3 @@
         </div>
     </div>
 </div>
-<hr class="mt-2">

@@ -26,7 +26,10 @@ body {
     overflow: hidden;
     transition: all 0.5s linear;
     border-right: 1px solid #404040;
-    /* border-top-right-radius: 20px; */
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
 }
 
 .sidebar ul{
@@ -112,6 +115,13 @@ body {
 
 .navbar-role {
     font-size: 13px;
+}
+
+.content-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: white;
 }
 
 
@@ -202,8 +212,10 @@ body {
     border-radius: 20px;
 }
 
-.recent-members-table, thead, th {
-    /* border: 1px solid white; */
+.add-member:hover {
+    background-color: #27262a;
+    color: #FFFFFF;
+    border: 1px solid #FFFFFF;
 }
 
 .recent-members-table th, .recent-members-table td {
@@ -223,4 +235,58 @@ body {
 .badge-expired {
     background-color: #f49ea4;
     color: #9e1c25;
+}
+
+/* recent payments and expiring soon */
+.recent-payments, .expiring-soon {
+    background-color: #000;
+    color: #FFFFFF;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.title .view-all {
+    background-color: #FFFFFF;
+    color: #000;
+    border-radius: 20px;
+    font-weight: bold;
+}
+
+.view-all:hover {
+    background-color: #27262a;
+    color: #FFFFFF;
+    border: 1px solid #FFFFFF;
+}
+
+.title .days {
+    font-size: 16px;
+}
+
+.payment-row p {
+    margin: 0;
+}
+
+.payment-row:last-child {
+    margin-bottom: 0 !important;
+}
+
+.payment-row .text-secondary,
+.expiring-soon .text-secondary {
+    font-size: 0.9rem;
+}
+
+.payment-row {
+    border-bottom: 1px solid #444;
+}
+
+.payment-row:last-child {
+    border-bottom: none;
+}
+
+
+
+.payment-and-expiring, .recent-payments, .expiring-soon,
+.title p, .title a {
+    /* border: 1px solid white; */
 }

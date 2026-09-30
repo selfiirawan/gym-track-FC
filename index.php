@@ -33,6 +33,10 @@ switch ($path) {
         include 'operations/members.php';
         break;
 
+    case 'payments':
+        include 'operations/payments.php';
+        break;
+
     case 'logout':
         include 'auth/logout.php';
         break;

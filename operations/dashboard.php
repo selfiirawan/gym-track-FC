@@ -30,11 +30,28 @@ $checkIns = $db->query("SELECT COUNT(*) FROM checkins WHERE DATE(checkin_time) =
 
 // recent members
 $recentMembers = $db->query("
-    SELECT m.member_id, m.name, m.join_date, p.plan_name, m.expiry_date
+    SELECT m.member_id, m.name, m.join_date, p.plan_name, m.expiry_date 
     FROM members m
     JOIN membership_plans p ON m.plan_id = p.plan_id
     ORDER BY m.join_date DESC
     LIMIT 5
+")->fetchAll(PDO::FETCH_ASSOC);
+
+// recent payments
+$recentPayments = $db->query("
+    SELECT p.amount, p.payment_date, m.name, m.contact
+    FROM payments p
+    JOIN members m ON p.member_id = m.member_id
+    ORDER BY p.payment_date DESC
+    LIMIT 5
+")->fetchAll(PDO::FETCH_ASSOC);
+
+// expiring soon
+$expiringSoon = $db->query("
+    SELECT name, contact, expiry_date, DATEDIFF(expiry_date, CURDATE()) AS days_left
+    FROM members 
+    WHERE expiry_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY)
+    ORDER BY expiry_date ASC
 ")->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
@@ -62,7 +79,7 @@ $recentMembers = $db->query("
             <!-- main content -->
             <div class="content px-4">
                 <!-- header -->
-                <div class="header d-flex justify-content-between p-3 pb-0 mb-3">
+                <div class="header d-flex justify-content-between p-3 pb-0 my-3">
                     <div class="greeting">
                         <h3>Hello, <?= htmlspecialchars($_SESSION['user']['name'] ?? '') ?></h3>
                         <p>Here's what's happening today</p>
@@ -103,7 +120,7 @@ $recentMembers = $db->query("
                     <div class="cards revenue">
                         <i class="bi bi-currency-dollar"></i>
                         <p class="stat-label text-secondary">Monthly Revenue</p>
-                        <p class="stat-value"><?= htmlspecialchars(number_format($monthlyRevenue, 2)) ?></p>
+                        <p class="stat-value">RM <?= htmlspecialchars(number_format($monthlyRevenue, 2)) ?></p>
                     </div>
 
                     <div class="cards daily-checkin">
@@ -114,10 +131,10 @@ $recentMembers = $db->query("
                 </div>
 
                 <!-- recent members -->
-                <div class="recent-members mx-2">
+                <div class="recent-members mx-2 my-5 px-2">
                     <div class="table-title d-flex justify-content-between p-3">
                         <p class="fw-bold fs-5 align-content-center">Recent Members</p>
-                        <a href="/members?action=new" class="align-content-center p-2 px-3">
+                        <a href="/members?action=new" class="add-member align-content-center p-2 px-3">
                             <i class="bi bi-plus"></i> Add Member
                         </a>
                     </div>
@@ -143,7 +160,7 @@ $recentMembers = $db->query("
                                     <tr>
                                         <td><?= htmlspecialchars($member['name']) ?></td>
                                         <td class="text-secondary plan"><?= htmlspecialchars($member['plan_name']) ?></td>
-                                        <td class="text-secondary join"><?= htmlspecialchars(date('d-m-Y', strtotime($member['expiry_date']))) ?></td>
+                                        <td class="text-secondary join"><?= htmlspecialchars(date('d-m-Y', strtotime($member['join_date']))) ?></td>
                                         <td>
                                             <span class="badge rounded-pill <?= $isActive ? 'badge-active' : 'badge-expired' ?>">
                                                 <?= $isActive ? 'Active' : 'Expired' ?>
@@ -154,6 +171,61 @@ $recentMembers = $db->query("
                             <?php endif; ?>
                         </tbody>
                     </table>
+                </div>
+
+                <!-- recent payments and expiring soon -->
+                <div class="d-flex gap-4 mx-2 my-5 payment-and-expiring">
+                    <!-- recent payments -->
+                    <div class="recent-payments px-4 py-3" style="flex: 2;">
+                        <div class="title d-flex justify-content-between mb-4">
+                            <p class="fw-bold fs-5 align-content-center m-0">Recent Payments</p>
+                            <a href="/payments" class="view-all align-content-center m-0 p-2 px-3">View all</a>
+                        </div>
+
+                        <div class="payment-list">
+                            <?php if (empty($recentPayments)): ?>
+                                <p class="text-center text-secondary py-3">No payment yet</p>
+                            <?php else: ?>
+                                <?php foreach ($recentPayments as $payment): ?>
+                                    <div class="payment-row d-flex justify-content-between align-items-center py-3">
+                                        <div>
+                                            <p class=""><?= htmlspecialchars($payment['name']) ?></p>
+                                            <p class="text-secondary"><?= htmlspecialchars(date('d-m-Y', strtotime($payment['payment_date']))) ?></p>
+                                        </div>
+
+                                        <div class="text-end">
+                                            <p class="fw-bold">RM <?= htmlspecialchars($payment['amount']) ?></p>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <!-- expiring soon -->
+                    <div class="expiring-soon border border-danger px-3" style="flex: 1;">
+                        <div class="title p-3 text-danger">
+                            <p class="fw-bold fs-5 align-content-center m-0">Expiring Soon</p>
+                            <p class="days">(7 Days)</p>
+                        </div>
+                        
+                        <div>
+                            <?php if (empty($expiringSoon)): ?>
+                                <p class="text-center text-secondary py-4">No memberships expiring soon</p>
+                            <?php else: ?>
+                                <?php foreach ($expiringSoon as $member): ?>
+                                    <div class="expiring-row d-flex justify-content-between align-items-center px-3">
+                                        <div>
+                                            <p class="mb-0"><?= htmlspecialchars($member['name']) ?></p>
+                                            <p class="text-secondary"><?= htmlspecialchars($member['contact']) ?></p>
+                                        </div>
+
+                                        <p class="text-danger mb-0 fw-bold"><?= $member['days_left'] ?> day<?= $member['days_left'] == 1 ? '' : 's' ?></p>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
