@@ -60,19 +60,21 @@ Finish the navbar and start on the main content.
 
 ---
 
-## Day 3 — Date: ____
+## Day 3 — Date: 30/09/2026
 
 ### What I planned to do today
-
+Complete the entire dashboard page and the search bar logic.
 
 ### What I actually did
-
+Completed the whole dashboard and the search bar logic. I can't fully test the search bar yet because I need to finish `members.php` first.
 
 ### Blockers / Challenges
-
+Mostly on the backend: the PHP logic and the SQL queries.
 
 ### What I learned
-
+- How to count "expiring soon" memberships with `DATEDIFF`.
+- How to use `strtotime()` in PHP.
+- How to use `BETWEEN` and `DATE_ADD` in SQL.
 
 ---
 
