@@ -80,7 +80,7 @@
         <!-- visible in admin only -->
         <?php if (isAdmin()): ?>
             <li>
-                <a href="/admin/plans">
+                <a href="/plans">
                     <i class="bi bi-credit-card"></i>
                     <span>Plans</span>
                 </a>
@@ -108,12 +108,12 @@
             </li>
         <?php endif; ?>
 
-        <li>
+        <!-- <li>
             <a href="#">
                 <i class="bi bi-gear"></i>
                 <span>Settings</span>
             </a>
-        </li>
+        </li> -->
     </ul>
     
     <hr class="mt-auto">

@@ -1,0 +1,50 @@
+.main-content {
+    min-width: 0;
+}
+
+/* navbar */
+.user-role p {
+    margin: 0;
+    padding: 0;
+    line-height: 1.2;
+}
+
+.bi-bell {
+    font-size: 1.2rem;
+}
+
+.avatar-initials {
+    width: 40px;
+    height: 40px;
+    background-color: #444;
+    font-size: 15px;
+}
+
+.content-navbar .bi {
+    color: #000;
+}
+
+.content-navbar .form-control {
+    border: none;
+    border-bottom: 1px solid lightgray;
+    border-radius: 0;
+}
+
+.content-navbar .form-control:focus {
+    box-shadow: none;
+}
+
+.content-navbar .dropdown-toggle:focus {
+    border: none;
+}
+
+.navbar-role {
+    font-size: 13px;
+}
+
+.content-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: white;
+}

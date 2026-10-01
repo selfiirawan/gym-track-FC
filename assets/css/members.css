@@ -1,0 +1,68 @@
+/* header */
+.greeting h3, .greeting p {
+    margin: 0;
+}
+
+.greeting h3 {
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+.greeting p {
+    font-size: 1rem;
+}
+.add-btn a {
+    color: #000;
+    background-color: #FFFFFF;
+    border: 2px solid #000;
+    font-weight: bold;
+    border-radius: 20px;
+}
+
+.add-btn a:hover {
+    background-color: #27262a;
+    color: #FFFFFF;
+    border: 1px solid #FFFFFF;
+}
+
+/* filter */
+.filter-btn a {
+    margin-right: 10px;
+    padding: 3px 15px;
+    background-color: transparent;
+    border: 2px solid #000;
+    border-radius: 20px;
+    color: #000;
+}
+
+.filter-btn a:hover {
+    background-color: #27262a;
+    color: #FFFFFF !important;
+}
+
+/* add member form */
+.add-member-form form {
+    background-color: #000;
+    color: #FFFFFF;
+    border-radius: 10px;
+}
+
+.form-label {
+    font-weight: 500;
+}
+
+/* members table */
+.badge-active {
+    background-color: #aede9e;
+    color: #30720a;
+}
+
+.badge-expired {
+    background-color: #f49ea4;
+    color: #9e1c25;
+}
+
+
+.member-table, th, td {
+    border: 1px solid black;
+}

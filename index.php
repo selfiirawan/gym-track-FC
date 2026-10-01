@@ -37,6 +37,10 @@ switch ($path) {
         include 'operations/payments.php';
         break;
 
+    case 'plans':
+        include 'admin/plans.php';
+        break;
+
     case 'logout':
         include 'auth/logout.php';
         break;
