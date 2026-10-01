@@ -11,6 +11,8 @@
 
 > Briefly describe your project idea, what problem it solves, and what you aim to build.
 
+GymTrack is a gym membership management system for managing members, staff, and admin tasks in one place. It aims to replace manual record-keeping with a role-based web app where each user type (member, staff, admin) sees only what is relevant to them.
+
 ---
 
 ## Tech Stack
