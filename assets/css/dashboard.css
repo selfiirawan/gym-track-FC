@@ -162,10 +162,3 @@
 .payment-row:last-child {
     border-bottom: none;
 }
-
-
-
-.payment-and-expiring, .recent-payments, .expiring-soon,
-.title p, .title a {
-    /* border: 1px solid white; */
-}

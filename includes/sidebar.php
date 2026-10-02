@@ -1,11 +1,13 @@
 <?php
-    $roleLabel = [
-        'admin' => 'Admin',
-        'staff' => 'Staff',
-        'member' => 'Member'
-    ];
 
-    $role = $roleLabel[$_SESSION['user']['role']] ?? 'Guest';
+$roleLabel = [
+    'admin' => 'Admin',
+    'staff' => 'Staff',
+    'member' => 'Member'
+];
+
+$role = $roleLabel[$_SESSION['user']['role']] ?? 'Guest';
+
 ?>
 
 <div class="sidebar p-3 d-flex flex-column position-sticky top-0 left-0 bottom-0">

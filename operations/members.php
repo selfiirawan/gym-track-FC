@@ -14,6 +14,18 @@ preventCaching();
 $plans = $db->query("SELECT * FROM membership_plans")->fetchAll(PDO::FETCH_ASSOC);
 $showAddForm = isset($_GET['action']) && $_GET['action'] === 'new';
 
+// edit member
+$editId = $_GET['edit'] ?? null;
+$editMember = null;
+
+if ($editId) {
+    $editStmt = $db->prepare("SELECT * FROM members WHERE member_id = ?");
+    $editStmt->execute([$editId]);
+    $editMember = $editStmt->fetch(PDO::FETCH_ASSOC);
+}
+
+$showForm = $showAddForm || $editMember;
+
 // add and delete submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -103,7 +115,7 @@ $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="header d-flex justify-content-between p-3 pb-0 my-3">
                     <div class="greeting">
                         <h3>Members</h3>
-                        <p>Manage all gym members.</p>
+                        <p>Manage all gym members</p>
                     </div>
 
                     <div class="add-btn align-content-center">
@@ -114,7 +126,7 @@ $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
 
                 <!-- add member form -->
-                <?php if ($showAddForm): ?>
+                <?php if ($showForm): ?>
                     <div class="add-member-form my-3 p-3 pb-0">
                         <form action="/members" method="POST" class="px-5 py-4">
                             <div class="mb-3 ">
@@ -161,68 +173,71 @@ $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
 
                 <!-- members table -->
-                <table class="member-table mb-5 w-100">
-                    <thead>
-                        <th>Member</th>
-                        <th>Contact</th>
-                        <th>Plan</th>
-                        <th>Joined</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </thead>
-                    <tbody>
-                        <?php if (empty($members)): ?>
-                            <tr>
-                                <td colspan="4" class="text-center text-secondary py-4">No members yet</td>
-                            </tr>
-                        <?php else: ?>
-                            <?php foreach ($members as $member): 
-                                $isActive = strtotime($member['expiry_date']) >= strtotime('today');
-                            ?>
+                <div class="member-table mx-3 my-5 px-3">
+                    <table class="table-content w-100 ">
+                        <thead>
+                            <th>Member</th>
+                            <th>Contact</th>
+                            <th>Plan</th>
+                            <th>Joined</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </thead>
+                        <tbody>
+                            <?php if (empty($members)): ?>
                                 <tr>
-                                    <!-- name -->
-                                    <td>
-                                        <div class="d-flex align-items-center gap-2">
-                                            <div class="avatar">
-                                                <?= htmlspecialchars(strtoupper(substr($member['name'], 0, 1))) ?>
-                                            </div>
-                                            <span><?= htmlspecialchars($member['name']) ?></span>
-                                        </div>
-                                    </td>
-
-                                    <!-- contact -->
-                                    <td>
-                                        <div><?= htmlspecialchars($member['email'] ?? '-') ?></div>
-                                        <div><?= htmlspecialchars($member['contact']) ?></div>
-                                    </td>
-
-                                    <!-- plan -->
-                                    <td><?= htmlspecialchars($member['plan_name']) ?></td>
-
-                                    <!-- joined -->
-                                    <td><?= htmlspecialchars(date('d-m-Y', strtotime($member['join_date']))) ?></td>
-
-                                    <!-- status -->
-                                    <td>
-                                        <span class="badge rounded-pill <?= $isActive ? 'badge-active' : 'badge-expired' ?>">
-                                            <?= $isActive ? 'Active' : 'Expired' ?>
-                                        </span>
-                                    </td>
-
-                                    <!-- action -->
-                                    <td>
-                                        <form action="/members" method="POST" class="d-inline" onsubmit="return confirm('Delete this member?');">
-                                            <input type="hidden" name="delete_id" value="<?= $member['member_id'] ?>">
-                                            <button type="submit" class="btn-icon text-danger">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form>
-                                    </td>
+                                    <td colspan="4" class="text-center text-secondary py-4">No members yet</td>
                                 </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+                            <?php else: ?>
+                                <?php foreach ($members as $member): 
+                                    $isActive = strtotime($member['expiry_date']) >= strtotime('today');
+                                ?>
+                                    <tr>
+                                        <!-- name -->
+                                        <td class="fw-semibold">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div class="avatar d-flex justify-content-center align-items-center me-1">
+                                                    <?= htmlspecialchars(strtoupper(substr($member['name'], 0, 1))) ?>
+                                                </div>
+                                                <span><?= htmlspecialchars($member['name']) ?></span>
+                                            </div>
+                                        </td>
+
+                                        <!-- contact -->
+                                        <td class="contact">
+                                            <div><?= htmlspecialchars($member['email'] ?? '-') ?></div>
+                                            <div class="text-secondary"><?= htmlspecialchars($member['contact']) ?></div>
+                                        </td>
+
+                                        <!-- plan -->
+                                        <td class="plan"><?= htmlspecialchars($member['plan_name']) ?></td>
+
+                                        <!-- joined -->
+                                        <td class="joined"><?= htmlspecialchars(date('d-m-Y', strtotime($member['join_date']))) ?></td>
+
+                                        <!-- status -->
+                                        <td>
+                                            <span class="badge rounded-pill <?= $isActive ? 'badge-active' : 'badge-expired' ?>">
+                                                <?= $isActive ? 'Active' : 'Expired' ?>
+                                            </span>
+                                        </td>
+
+                                        <!-- action -->
+                                        <td>
+                                            <a href="/members?action=new&edit=<?= $member['member_id'] ?>"><i class="bi bi-pencil"></i></a>
+                                            <form action="/members" method="POST" class="d-inline" onsubmit="return confirm('Delete this member?');">
+                                                <input type="hidden" name="delete_id" value="<?= $member['member_id'] ?>">
+                                                <button type="submit" class="btn-icon btn text-danger">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

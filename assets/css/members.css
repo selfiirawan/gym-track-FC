@@ -45,6 +45,7 @@
     background-color: #000;
     color: #FFFFFF;
     border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
 .form-label {
@@ -62,7 +63,49 @@
     color: #9e1c25;
 }
 
+.member-table th, .member-table td {
+    padding: 10px;
+}
 
-.member-table, th, td {
-    border: 1px solid black;
+.member-table thead {
+    border-bottom: 1px solid #b3b3b3;
+    font-size: 1.1rem;
+}
+
+tbody tr {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+tbody tr:last-child {
+    border: none;
+}
+
+.member-table .contact, .plan, .joined {
+    font-size: 0.9rem;
+}
+
+.member-table {
+    box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+}
+
+/* avatar */
+.avatar {
+    /* border: 1px solid black; */
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #2b2b2b;
+    color: #FFFFFF;
+    font-size: 15px;
+    padding: 18px;
+    flex-shrink: 0;
+}
+
+.btn-icon:hover {
+    color: #ff1818 !important;
+}
+
+.member-table, table, th, td {
+    /* border: 1px solid black; */
 }
