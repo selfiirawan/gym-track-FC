@@ -10,7 +10,7 @@ if (isGuest()) {
 
 preventCaching();
 
-// for add new member form
+// to add new member form
 $plans = $db->query("SELECT * FROM membership_plans")->fetchAll(PDO::FETCH_ASSOC);
 $showAddForm = isset($_GET['action']) && $_GET['action'] === 'new';
 

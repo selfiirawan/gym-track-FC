@@ -17,7 +17,7 @@ a {
 .sidebar {
     background-color: #000;
     color: #FFFFFF;
-    width: 250px;
+    width: 260px;
     overflow: hidden;
     transition: all 0.5s linear;
     border-right: 1px solid #404040;
@@ -39,6 +39,7 @@ a {
 
 .sidebar span {
     color: #FFFFFF;
+    font-size: 15px;
 }
 
 .sidebar a {

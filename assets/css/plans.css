@@ -24,3 +24,14 @@
     color: #FFFFFF;
     border: 1px solid #FFFFFF;
 }
+
+/* plan cards */
+.parents {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.parents, .plan-card, form, label, .row, .form-control {
+    border: 1px solid black;
+}
