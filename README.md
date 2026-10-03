@@ -80,19 +80,31 @@ Mostly on the backend: the PHP logic and the SQL queries.
 
 ---
 
-## Day 4 — Date: ____
+## Day 4 — Date: 03/10/2026
 
 ### What I planned to do today
-
+- Complete the `members.php` page.
+- Add pagination to the main table.
+- Add the active state for the sidebar and the filter button.
 
 ### What I actually did
-
+- Completed most of `members.php`. 
+- Not done yet: the edit button in the action column, pagination, and the active state for the sidebar and filter. 
+- I'm postponing the active stats for sidebar & filter btn, and the pagination features to focus on the edit button and the other pages first.
 
 ### Blockers / Challenges
-
+Mostly on the backend and the SQL queries.
 
 ### What I learned
-
+- The logic to add and delete a member.
+- A shorter, more efficient way to build the logic for search, filter, and fetching all members together.
+- `COUNT()` never returns `NULL`, but `SUM()`/`AVG()` do when there are no matching rows, hence `?? 0`.
+- The `WHERE 1=1` trick for safely building dynamic filters with `AND`, no matter how many conditions apply.
+- The `$params = []` pattern: collect only the values that actually need `?` placeholders.
+- The `.=` string-append operator, used to build the SQL conditionally, similar to `+=`.
+- `strtotime()` with `"+$duration days"`. 
+- Learned about **Unix timestap** (a big number representing seconds since 1970).
+- The difference between `??` , `?` and `:`.
 
 ---
 
