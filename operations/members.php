@@ -28,7 +28,7 @@ if ($editId) {
 
 $showForm = $showAddForm || $editMember;
 
-// add and delete submission
+// edit, add and delete submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // delete member
@@ -55,10 +55,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $expiryDate = date('Y-m-d', strtotime($joinedDate . "+$duration days"));
 
     if (isset($_POST['member_id'])) {
-        // update 
+        // edit 
         $update = $db->prepare("UPDATE members SET name=?, contact=?, email=?, join_date=?, plan_id=?, expiry_date=? WHERE member_id=?");
         $update->execute([$name, $contact, $email, $joinedDate, $planId, $expiryDate, $_POST['member_id']]);
     } else {
+        // add
         try {
             $insert = $db->prepare("INSERT INTO members (name, contact, email, join_date, plan_id, expiry_date, registered_by) VALUES (?, ?, ?, ?, ?, ?, ?)");
             $insert->execute([$name, $contact, $email, $joinedDate, $planId, $expiryDate, $registerBy]);

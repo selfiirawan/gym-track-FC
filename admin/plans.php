@@ -22,6 +22,18 @@ $plans = $db->query("SELECT * FROM membership_plans")->fetchAll(PDO::FETCH_ASSOC
 // when create new plan is clicked
 $showAddForm = isset($_GET['action']) && $_GET['action'] === 'new';
 
+// edit plan
+$editId = $_GET['edit'] ?? null;
+$editPlan = null;
+
+if ($editId) {
+    $editStmt = $db->prepare("SELECT * FROM membership_plans WHERE plan_id = ?");
+    $editStmt->execute([$editId]);
+    $editPlan = $editStmt->fetch(PDO::FETCH_ASSOC);
+}
+
+$showForm = $showAddForm || $editPlan;
+
 // add and delete plan
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -39,8 +51,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $duration = $_POST['duration'];
     $features = $_POST['features'];
 
-    $stmt = $db->prepare("INSERT INTO membership_plans (plan_name, price, duration_days, features) VALUES (?, ?, ?, ?)");
-    $stmt->execute([$name, $price, $duration, $features]);
+    if (isset($_POST['plan_id'])) {
+        // edit
+        $update = $db->prepare("UPDATE membership_plans SET plan_name=?, price=?, duration_days=?, features=? WHERE plan_id = ?");
+        $update->execute([$name, $price, $duration, $features, $_POST['plan_id']]);
+    } else {
+        // add
+        $stmt = $db->prepare("INSERT INTO membership_plans (plan_name, price, duration_days, features) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$name, $price, $duration, $features]);
+    }
 
     header('Location: /plans');
     exit;
@@ -89,14 +108,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
 
                 <!-- create new plan -->
-                <?php if ($showAddForm): ?>
+                <?php if ($showForm): ?>
                     <div class="create-new-form">
                         <form action="/plans" method="POST">
+
+                            <?php if ($editPlan): ?>
+                                <input type="hidden" name="plan_id" value="<?= $editPlan['plan_id'] ?>">
+                            <?php endif; ?>
+
                             <!-- name -->
                             <div class="row mb-3">
                                 <label for="name" class="col-md-2 col-form-label">Plan's Name</label>
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" id="name" name="name" required>
+                                    <input type="text" class="form-control" id="name" name="name" value="<?= htmlspecialchars($editPlan['plan_name'] ?? '') ?>" required>
                                 </div>
                             </div>
 
@@ -104,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="row mb-3">
                                 <label for="price" class="col-md-2 col-form-label">Price (RM)</label>
                                 <div class="col-md-3">
-                                    <input type="number" class="form-control" id="price" name="price" required>
+                                    <input type="number" class="form-control" id="price" name="price" value="<?= htmlspecialchars($editPlan['price'] ?? '') ?>" required>
                                 </div>
                             </div>
 
@@ -112,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="row mb-3">
                                 <label for="duration" class="col-md-2 col-form-label">Duration (days)</label>
                                 <div class="col-md-3">
-                                    <input type="number" class="form-control id="duration" name="duration" min="0" max="365" required">
+                                    <input type="number" class="form-control id="duration" name="duration" min="0" max="365" value="<?= htmlspecialchars($editPlan['duration_days'] ?? '') ?>" required">
                                 </div>
                             </div>
 
@@ -120,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="row mb-3">
                                 <label for="features" class="col-md-2 col-form-label">Features</label>
                                 <div class="col-md-5">
-                                    <textarea name="features" id="features" class="form-control" rows="3" placeholder="Separate with comma ( , )"></textarea>
+                                    <textarea name="features" id="features" class="form-control" rows="3" placeholder="Separate with comma ( , )"><?= htmlspecialchars($editPlan['features'] ?? '') ?></textarea>
                                 </div>
                             </div>
 
@@ -130,7 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php endif; ?>
 
                 <!-- membership plans card -->
-                <div class="parents mx-3">
+                <div class="parents mx-3 my-5">
                     <?php foreach ($plans as $plan): 
                         // separate features list
                         $featuresList = explode(',', $plan['features']);
@@ -153,7 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </ul>
 
                             <!-- edit and delete button -->
-                            <div>
+                            <div <?= ($_SESSION['user']['role'] === 'staff') ? 'hidden' : '' ?>>
                                 <a href="/plans?edit=<?= $plan['plan_id'] ?>" class="editBtn">
                                     <i class="bi bi-pencil text-secondary"></i>
                                     Edit
