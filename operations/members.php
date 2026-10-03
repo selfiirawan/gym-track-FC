@@ -14,6 +14,8 @@ preventCaching();
 $plans = $db->query("SELECT * FROM membership_plans")->fetchAll(PDO::FETCH_ASSOC);
 $showAddForm = isset($_GET['action']) && $_GET['action'] === 'new';
 
+$error = '';
+
 // edit member
 $editId = $_GET['edit'] ?? null;
 $editMember = null;
@@ -30,11 +32,9 @@ $showForm = $showAddForm || $editMember;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // delete member
-    $deleteId = $_POST['delete_id'];
-
     if (isset($_POST['delete_id'])) {
         $delete = $db->prepare("DELETE FROM members WHERE member_id = ?");
-        $delete->execute([$deleteId]);
+        $delete->execute([$_POST['delete_id']]);
         header('Location: /members');
         exit;
     }
@@ -54,11 +54,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $expiryDate = date('Y-m-d', strtotime($joinedDate . "+$duration days"));
 
-    $insert = $db->prepare("INSERT INTO members (name, contact, email, join_date, plan_id, expiry_date, registered_by) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $insert->execute([$name, $contact, $email, $joinedDate, $planId, $expiryDate, $registerBy]);
+    if (isset($_POST['member_id'])) {
+        // update 
+        $update = $db->prepare("UPDATE members SET name=?, contact=?, email=?, join_date=?, plan_id=?, expiry_date=? WHERE member_id=?");
+        $update->execute([$name, $contact, $email, $joinedDate, $planId, $expiryDate, $_POST['member_id']]);
+    } else {
+        try {
+            $insert = $db->prepare("INSERT INTO members (name, contact, email, join_date, plan_id, expiry_date, registered_by) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $insert->execute([$name, $contact, $email, $joinedDate, $planId, $expiryDate, $registerBy]);
+        } catch (PDOException $e) {
+            if ($e->getCode() == 23000) {
+                $error = 'A member with this email already exists.';
+            } else {
+                throw $e;
+            }
+        }
+    }
 
-    header('Location: /members');
-    exit;
+    if ($error == '') {
+        header('Location: /members');
+        exit;
+    }
 }
 
 // search, filter and fetch members
@@ -125,42 +141,58 @@ $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </div>
                 </div>
 
+                <!-- duplicate error -->
+                <?php if ($error): ?>
+                    <div class="mx-3">
+                        <p class="alert alert-danger" class=""><?= htmlspecialchars($error) ?></p>
+                    </div>
+                <?php endif; ?>
+
                 <!-- add member form -->
                 <?php if ($showForm): ?>
                     <div class="add-member-form my-3 p-3 pb-0">
                         <form action="/members" method="POST" class="px-5 py-4">
+
+                            <?php if ($editMember): ?>
+                                <input type="hidden" name="member_id" value="<?= $editMember['member_id'] ?>">
+                            <?php endif; ?>
+
                             <div class="mb-3 ">
                                 <label class="form-label" for="new-name">Name</label>
-                                <input type="text" id="new-name" class="form-control" name="name" placeholder="New member's name" required>
+                                <input type="text" id="new-name" class="form-control" name="name" value="<?= htmlspecialchars($editMember['name'] ?? '') ?>" placeholder="New member's name" required>
                             </div>
 
                             <div class="mb-3 row ">
                                 <div class="col">
                                     <label class="form-label" for="contact">Contact No.</label>
-                                    <input type="text" id="contact" class="form-control" name="contact" placeholder="0123456789" required>
+                                    <input type="text" id="contact" class="form-control" name="contact" value="<?= htmlspecialchars($editMember['contact'] ?? '') ?>" placeholder="0123456789" required>
                                 </div>
                                 <div class="col">
                                     <label class="form-label" for="email">Email</label>
-                                    <input type="email" id="email" class="form-control" name="email" placeholder="member@gmail.com" required>
+                                    <input type="email" id="email" class="form-control" name="email" value="<?= htmlspecialchars($editMember['email'] ?? '') ?>" placeholder="member@gmail.com">
                                 </div>
                             </div>
 
                             <div class="mb-3 row ">
                                 <div class="col">
                                     <label class="form-label" for="joined-date">Joined Date</label>
-                                    <input type="date" name="joined_date" id="joined-date" class="form-control" required>
+                                    <input type="date" name="joined_date" value="<?= htmlspecialchars($editMember['join_date'] ?? '') ?>" id="joined-date" class="form-control" required>
                                 </div>
+
                                 <div class="col">
                                     <label for="plan" class="form-label">Membership Plan</label>
+
                                     <select name="plan_id" id="plan" class="form-select" required>
                                         <?php foreach ($plans as $plan): ?>
-                                            <option value="<?= $plan['plan_id'] ?>"><?= htmlspecialchars($plan['plan_name']) ?></option>
+                                            <option value="<?= $plan['plan_id'] ?>" <?= ($editMember['plan_id'] ?? null) == $plan['plan_id'] ? 'selected' : '' ?>>
+                                                <?= htmlspecialchars($plan['plan_name']) ?>
+                                            </option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
                             </div>
 
-                            <button type="submit" class="btn btn-outline-light mt-3">Register Member</button>
+                            <button type="submit" class="btn btn-outline-light mt-3"><?= $editMember ? 'Update' : 'Register' ?> Member</button>
                         </form>
                     </div>
                 <?php endif; ?>
@@ -224,7 +256,8 @@ $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                         <!-- action -->
                                         <td>
-                                            <a href="/members?action=new&edit=<?= $member['member_id'] ?>"><i class="bi bi-pencil"></i></a>
+                                            <a href="/members?action=new&edit=<?= $member['member_id'] ?>" class="editBtn"><i class="bi bi-pencil text-secondary"></i></a>
+
                                             <form action="/members" method="POST" class="d-inline" onsubmit="return confirm('Delete this member?');">
                                                 <input type="hidden" name="delete_id" value="<?= $member['member_id'] ?>">
                                                 <button type="submit" class="btn-icon btn text-danger">

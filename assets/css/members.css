@@ -106,6 +106,10 @@ tbody tr:last-child {
     color: #ff1818 !important;
 }
 
+.bi-pencil:hover {
+    color: #000 !important;
+}
+
 .member-table, table, th, td {
     /* border: 1px solid black; */
 }
