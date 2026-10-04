@@ -100,17 +100,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <p><?= htmlspecialchars($caption) ?></p>
                     </div>
 
-                    <div class="add-btn align-content-center" <?= ($_SESSION['user']['role'] === 'staff') ? 'hidden' : '' ?>>
+                    <?php if ($_SESSION['user']['role'] !== 'staff'): ?>
+                    <div class="add-btn align-content-center">
                         <a href="/plans?action=new" class="p-2 px-3">
                             <i class="bi bi-plus"></i> Create New Plan
                         </a>
                     </div>
+                    <?php endif; ?>
                 </div>
 
-                <!-- create new plan -->
+                <!-- edit or create new plan -->
                 <?php if ($showForm): ?>
-                    <div class="create-new-form">
-                        <form action="/plans" method="POST">
+                    <div class="create-new-form mx-3 p-3">
+                        <form action="/plans" method="POST" class="">
 
                             <?php if ($editPlan): ?>
                                 <input type="hidden" name="plan_id" value="<?= $editPlan['plan_id'] ?>">
@@ -147,8 +149,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <textarea name="features" id="features" class="form-control" rows="3" placeholder="Separate with comma ( , )"><?= htmlspecialchars($editPlan['features'] ?? '') ?></textarea>
                                 </div>
                             </div>
-
-                            <button type="submit" class="btn btn-outline-dark mt-3">Create</button>
+                            
+                            <div class="d-flex btnGroup mt-5">
+                                <button type="submit" class="btn btn-dark createBtn me-3">Create</button>
+                                <a href="/plans" class="btn btn-outline-dark px-3 m-0 align-content-center">Cancel</a>
+                            </div>
                         </form>
                     </div>
                 <?php endif; ?>
@@ -159,27 +164,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         // separate features list
                         $featuresList = explode(',', $plan['features']);
                     ?>
-                        <div class="plan-card p-4">
+                        <div class="plan-card p-4 d-flex flex-column">
                             <!-- plan name -->
-                            <p><?= htmlspecialchars($plan['plan_name']) ?></p>
+                            <p class="name m-0"><?= htmlspecialchars($plan['plan_name']) ?></p>
 
                             <!-- price -->
-                            <p>RM <?= htmlspecialchars($plan['price']) ?> </p>
+                            <p class="price fw-bold fs-2 m-0">RM <?= htmlspecialchars(number_format($plan['price'], 0)) ?> </p>
 
                             <!-- duration -->
-                            <p><?= htmlspecialchars($plan['duration_days']) ?> days</p>
+                            <p class="duration m-0 mb-4 text-secondary"><?= htmlspecialchars($plan['duration_days']) ?> days</p>
 
                             <!-- benefits -->
-                            <ul>
+                            <ul class="m-0 mb-4 p-0">
                                 <?php foreach ($featuresList as $feature): ?>
-                                    <li><?= htmlspecialchars(trim($feature)) ?></li>
+                                    <li>
+                                        <i class="bi bi-check2-circle me-2"></i>
+                                        <?= htmlspecialchars(trim($feature)) ?>
+                                    </li>
                                 <?php endforeach; ?>
                             </ul>
 
                             <!-- edit and delete button -->
-                            <div <?= ($_SESSION['user']['role'] === 'staff') ? 'hidden' : '' ?>>
-                                <a href="/plans?edit=<?= $plan['plan_id'] ?>" class="editBtn">
-                                    <i class="bi bi-pencil text-secondary"></i>
+                            <?php if ($_SESSION['user']['role'] !== 'staff'): ?>
+                            <div class="action mt-auto d-flex align-items-center">
+                                <a href="/plans?edit=<?= $plan['plan_id'] ?>" class="editBtn fw-bold">
+                                    <i class="bi bi-pencil text-secondary me-2"></i>
                                     Edit
                                 </a>
 
@@ -190,6 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     </button>
                                 </form>
                             </div>
+                            <?php endif; ?>
                         </div>
                     <?php endforeach; ?>
                 </div>

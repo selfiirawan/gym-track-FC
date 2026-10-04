@@ -38,7 +38,11 @@ switch ($path) {
         break;
 
     case 'plans':
-        include 'admin/plans.php';
+        if (!isStaff()) {
+            header('Location: /dashboard');
+            exit;
+        }
+        include 'operations/plans.php';
         break;
 
     case 'logout':
