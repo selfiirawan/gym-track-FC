@@ -1,0 +1,71 @@
+/* header */
+.greeting h3, .greeting p {
+    margin: 0;
+}
+
+.greeting h3 {
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+.greeting p {
+    font-size: 1rem;
+}
+.add-btn a {
+    color: #000;
+    background-color: #FFFFFF;
+    border: 2px solid #000;
+    font-weight: bold;
+    border-radius: 20px;
+}
+
+.add-btn a:hover {
+    background-color: #27262a;
+    color: #FFFFFF;
+    border: 1px solid #FFFFFF;
+}
+
+.date {
+    font-size: 15px !important;
+}
+
+/* stat card  */
+.stat-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    /* grid-gap: 20px; */
+}
+
+.cards {
+    border-radius: 10px;
+    background-color: #000;
+    color: #FFFFFF;
+    padding: 1rem 1.3rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.stat-value {
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+.stat-label {
+    margin-top: 13px;
+}
+
+.cards .bi {
+    font-size: 1.3rem;
+}
+
+/* avatar */
+.avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #2b2b2b;
+    color: #FFFFFF;
+    font-size: 15px;
+    padding: 18px;
+    flex-shrink: 0;
+}

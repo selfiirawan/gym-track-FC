@@ -152,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             
                             <div class="d-flex btnGroup mt-5">
                                 <button type="submit" class="btn btn-dark createBtn me-3">Create</button>
-                                <a href="/plans" class="btn btn-outline-dark px-3 m-0 align-content-center">Cancel</a>
+                                <a href="/plans" class="btn btn-outline-dark px-3 m-0 align-content-center cancelBtn">Cancel</a>
                             </div>
                         </form>
                     </div>

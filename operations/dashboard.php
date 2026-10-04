@@ -133,16 +133,16 @@ $expiringSoon = $db->query("
                 </div>
 
                 <!-- recent members -->
-                <div class="recent-members mx-2 my-5 px-2">
+                <div class="recent-members mx-2 my-5">
                     <div class="table-title d-flex justify-content-between p-3">
-                        <p class="fw-bold fs-5 align-content-center">Recent Members</p>
+                        <p class="fw-bold fs-3 align-content-center">Recent Members</p>
                         <a href="/members?action=new" class="add-member align-content-center p-2 px-3">
                             <i class="bi bi-plus"></i> Add Member
                         </a>
                     </div>
 
                     <table class="recent-members-table w-100">
-                        <thead class="text-secondary">
+                        <thead class="text-dark">
                             <tr>
                                 <th>Member</th>
                                 <th>Plan</th>
@@ -160,7 +160,7 @@ $expiringSoon = $db->query("
                                     $isActive = strtotime($member['expiry_date']) >= strtotime('today');
                                 ?>
                                     <tr>
-                                        <td><?= htmlspecialchars($member['name']) ?></td>
+                                        <td class="fw-semibold"><?= htmlspecialchars($member['name']) ?></td>
                                         <td class="text-secondary plan"><?= htmlspecialchars($member['plan_name']) ?></td>
                                         <td class="text-secondary join"><?= htmlspecialchars(date('d-m-Y', strtotime($member['join_date']))) ?></td>
                                         <td>

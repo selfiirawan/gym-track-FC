@@ -109,9 +109,13 @@
     border: 1px solid black;
 }
 
-.createBtn {
+.createBtn, .cancelBtn {
     width: 150px;
     font-weight: bold;
+    border-radius: 10px;
 }
 
+.cancelBtn {
+    border: 2px solid #27262a !important;
+}
 
