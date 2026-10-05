@@ -34,11 +34,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['member_id'])) {
 $todayCheckIn = $db->query("SELECT COUNT(*) FROM checkins WHERE DATE(checkin_time) = CURDATE()")->fetchColumn();
 
 // check in log
-$checkinLog = $db->query("
-    SELECT c.checkin_time, m.name FROM checkins c
-    JOIN members m ON c.member_id = m.member_id
-    ORDER BY c.checkin_time DESC
-")->fetchAll(PDO::FETCH_ASSOC);
+// $checkinLog = $db->query("
+//     SELECT c.checkin_time, m.name FROM checkins c
+//     JOIN members m ON c.member_id = m.member_id
+//     ORDER BY c.checkin_time DESC
+// ")->fetchAll(PDO::FETCH_ASSOC);
+
+$logSearch = $_GET['log'] ?? '';
+
+$logSql = "SELECT c.checkin_time, m.name FROM checkins c JOIN members m ON c.member_id = m.member_id WHERE 1=1";
+$logParams = [];
+
+if ($logSearch !== '') {
+    $logSql .= " AND m.name LIKE ?";
+    $logParams[] = '%' . $logSearch . '%';
+}
+
+$logSql .= " ORDER BY c.checkin_time DESC";
+
+$logStmt = $db->prepare($logSql);
+$logStmt->execute($logParams);
+$checkinLog = $logStmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -85,11 +101,11 @@ $checkinLog = $db->query("
                 </div>
 
                 <!-- search form -->
-                <div>
-                    <p>Find member to check in</p>
+                <div class="search-form2 mx-2 my-5 p-4">
+                    <p class="fw-bold fs-5">Find member to check in</p>
                     <form action="/checkin" method="GET" class="mb-3 gap-2 d-flex">
                         <input type="text" name="q" class="form-control" value="<?= htmlspecialchars($search) ?>" placeholder="Search member by name...">
-                        <button type="submit" class="btn btn-outline-dark">Search</button>
+                        <button type="submit" class="btn btn-outline-light">Search</button>
                     </form>
 
                     <!-- result of search -->
@@ -99,53 +115,53 @@ $checkinLog = $db->query("
                         <?php else: ?>
                             <?php foreach ($results as $member): ?>
                                 <div class="search-result d-flex justify-content-between align-items-center p-2">
-                                    <p><?= htmlspecialchars($member['name']) ?> - <span class="text-secondary"><?= htmlspecialchars($member['contact']) ?>, <?= htmlspecialchars($member['email'] ?? 'no email') ?></span></p>
+                                    <p class="m-0 my-2"><?= htmlspecialchars($member['name']) ?> - <span class="text-secondary"><?= htmlspecialchars($member['contact']) ?>, <?= htmlspecialchars($member['email'] ?? 'no email') ?></span></p>
 
                                     <form action="/checkin" method="POST">
                                         <input type="hidden" name="member_id" value="<?= $member['member_id'] ?>">
-                                        <button type="submit" class="btn btn-sm btn-outline-dark">Check In</button>
+                                        <button type="submit" class="btn btn-sm btn-outline-light">Check In</button>
                                     </form>
                                 </div>
                             <?php endforeach; ?>
                         <?php endif; ?>
                     <?php endif; ?>
+                </div>
 
-                    <!-- check in log table -->
-                    <div class="my-4 checkin-log">
-                        <p>Check-in Log</p>
+                <!-- check in log table -->
+                <div class="my-4 checkin-log mx-2 my-5">
+                    <p class="title">Check-in Log</p>
 
-                        <table class="w-100 table-content">
-                            <thead>
-                                <th>Member</th>
-                                <th>Date</th>
-                                <th>Time</th>
-                            </thead>
+                    <table class="w-100 table-content">
+                        <thead>
+                            <th>Member</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                        </thead>
 
-                            <tbody>
-                                <?php if (empty($checkinLog)): ?>
-                                    <tr><td colspan="3" class="text-center text-secondary py-4">No check-ins yet</td></tr>
-                                <?php else: ?>
-                                    <?php foreach ($checkinLog as $log): ?>
-                                        <tr>
-                                            <!-- name -->
-                                            <td class="fw-semibold">
-                                                <div class="d-flex align-items-center gap-2">
-                                                    <div class="avatar d-flex justify-content-center align-items-center me-1">
-                                                        <?= htmlspecialchars(strtoupper(substr($log['name'], 0, 1))) ?>
-                                                    </div>
-                                                    <span><?= htmlspecialchars($log['name']) ?></span>
+                        <tbody>
+                            <?php if (empty($checkinLog)): ?>
+                                <tr><td colspan="3" class="text-center text-secondary py-4">No check-ins yet</td></tr>
+                            <?php else: ?>
+                                <?php foreach ($checkinLog as $log): ?>
+                                    <tr>
+                                        <!-- name -->
+                                        <td class="fw-semibold">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div class="avatar d-flex justify-content-center align-items-center me-1">
+                                                    <?= htmlspecialchars(strtoupper(substr($log['name'], 0, 1))) ?>
                                                 </div>
-                                            </td>
+                                                <span><?= htmlspecialchars($log['name']) ?></span>
+                                            </div>
+                                        </td>
 
-                                            <!-- date and time -->
-                                            <td><?= htmlspecialchars(date('d-m-Y', strtotime($log['checkin_time']))) ?></td>
-                                            <td><?= htmlspecialchars(date('g:i A', strtotime($log['checkin_time']))) ?></td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
+                                        <!-- date and time -->
+                                        <td><?= htmlspecialchars(date('d-m-Y', strtotime($log['checkin_time']))) ?></td>
+                                        <td><?= htmlspecialchars(date('g:i A', strtotime($log['checkin_time']))) ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

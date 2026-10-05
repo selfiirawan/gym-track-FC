@@ -58,6 +58,27 @@
     font-size: 1.3rem;
 }
 
+/* search form */
+.search-form2 {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+    background-color: #000;
+    color: #FFFFFF;
+}
+
+.search-result {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.search-result:last-child {
+    border: none;
+}
+
+/* checkin log */
+.checkin-log {
+    border: 1px solid black;
+}
+
 /* avatar */
 .avatar {
     width: 30px;

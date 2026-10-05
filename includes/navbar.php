@@ -1,8 +1,22 @@
+<?php
+$currentPath = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+
+$searchAction = 'members';
+$searchParam = 'q';
+$searchPlaceholder = 'Search...';
+
+if ($currentPath === 'checkin') {
+    $searchAction = 'checkin';
+    $searchParam = 'log';
+    $searchPlaceholder = 'Search check-in log...';
+}
+?>
+
 <div class="content-navbar d-flex justify-content-between align-items-center pt-2">
     <!-- search bar -->
-    <form action="/members" method="GET" class="d-flex align-items-center gap-2 h-100 ms-3 w-25 p-3 pb-0 search-form">
+    <form action="/<?= htmlspecialchars($searchAction) ?>" method="GET" class="d-flex align-items-center gap-2 h-100 ms-3 w-25 p-3 pb-0 search-form">
         <i class="bi bi-search m-0 p-0"></i>
-        <input type="search" name="q" class="form-control text-dark m-0 p-1 ps-3 bg-transparent" placeholder="Search...">
+        <input type="search" name="<?= $searchParam ?>" class="form-control text-dark m-0 p-1 ps-3 bg-transparent" placeholder="<?= $searchPlaceholder ?>">
     </form>
 
     <div class="d-flex align-items-center right-nav">
