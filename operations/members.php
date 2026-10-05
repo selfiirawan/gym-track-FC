@@ -209,12 +209,14 @@ $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="member-table mx-3 my-5 px-3">
                     <table class="table-content w-100 ">
                         <thead>
-                            <th>Member</th>
-                            <th>Contact</th>
-                            <th>Plan</th>
-                            <th>Joined</th>
-                            <th>Status</th>
-                            <th>Action</th>
+                            <tr>
+                                <th>Member</th>
+                                <th>Contact</th>
+                                <th>Plan</th>
+                                <th>Joined</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
                         </thead>
                         <tbody>
                             <?php if (empty($members)): ?>

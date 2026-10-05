@@ -19,7 +19,8 @@ $activeMembers = $db->query("SELECT COUNT(*) FROM members WHERE expiry_date >= C
 // monthly revenue
 $monthlyRevenue = $db->query("
     SELECT SUM(amount) FROM payments
-    WHERE MONTH(payment_date) = MONTH(CURDATE())
+    WHERE status = 'paid'
+    AND MONTH(payment_date) = MONTH(CURDATE())
     AND YEAR(payment_date) = YEAR(CURDATE())
 ")->fetchColumn();
 

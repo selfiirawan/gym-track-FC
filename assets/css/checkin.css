@@ -40,7 +40,6 @@
     border-radius: 10px;
     background-color: #000;
     color: #FFFFFF;
-    padding: 1rem 1.3rem;
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
@@ -48,10 +47,6 @@
 .stat-value {
     font-weight: bold;
     font-size: 2rem;
-}
-
-.stat-label {
-    margin-top: 13px;
 }
 
 .cards .bi {

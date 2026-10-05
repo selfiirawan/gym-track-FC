@@ -83,14 +83,14 @@ $checkinLog = $logStmt->fetchAll(PDO::FETCH_ASSOC);
                         <p>Log member attendance</p>
                         <p class="text-secondary date mt-2"><?= $currDate ?></p>
                     </div>
-                </div>
 
-                <!-- checkin stat -->
-                <div class="stat-cards my-5 px-2">
-                    <div class="cards total-checkin">
-                        <i class="bi bi-calendar2-check"></i>
-                        <p class="stat-label text-secondary">Today's Check-Ins</p>
-                        <p class="stat-value"><?= htmlspecialchars($todayCheckIn) ?></p>
+                    <!-- checkin stat -->
+                    <div class="cards total-checkin p-2 px-4">
+                        <div class="d-flex justify-content-between gap-3">
+                            <i class="bi bi-calendar2-check m-0"></i>
+                            <p class="stat-label text-secondary m-0 align-content-center">Today's Check-Ins</p>
+                        </div>
+                        <p class="stat-value m-0 text-end"><?= htmlspecialchars($todayCheckIn) ?></p>
                     </div>
                 </div>
 
