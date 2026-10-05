@@ -34,12 +34,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['member_id'])) {
 $todayCheckIn = $db->query("SELECT COUNT(*) FROM checkins WHERE DATE(checkin_time) = CURDATE()")->fetchColumn();
 
 // check in log
-// $checkinLog = $db->query("
-//     SELECT c.checkin_time, m.name FROM checkins c
-//     JOIN members m ON c.member_id = m.member_id
-//     ORDER BY c.checkin_time DESC
-// ")->fetchAll(PDO::FETCH_ASSOC);
-
 $logSearch = $_GET['log'] ?? '';
 
 $logSql = "SELECT c.checkin_time, m.name FROM checkins c JOIN members m ON c.member_id = m.member_id WHERE 1=1";
@@ -128,40 +122,44 @@ $checkinLog = $logStmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
 
                 <!-- check in log table -->
-                <div class="my-4 checkin-log mx-2 my-5">
-                    <p class="title">Check-in Log</p>
+                <div class="my-5 checkin-log mx-2">
+                    <p class="title fw-bold fs-4 mx-2">Check-in Log</p>
+                    
+                    <div class="table-wrapper p-3">
+                        <table class="w-100 table-content">
+                            <thead>
+                                <tr>
+                                    <th>Member</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                </tr>
+                            </thead>
 
-                    <table class="w-100 table-content">
-                        <thead>
-                            <th>Member</th>
-                            <th>Date</th>
-                            <th>Time</th>
-                        </thead>
-
-                        <tbody>
-                            <?php if (empty($checkinLog)): ?>
-                                <tr><td colspan="3" class="text-center text-secondary py-4">No check-ins yet</td></tr>
-                            <?php else: ?>
-                                <?php foreach ($checkinLog as $log): ?>
-                                    <tr>
-                                        <!-- name -->
-                                        <td class="fw-semibold">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <div class="avatar d-flex justify-content-center align-items-center me-1">
-                                                    <?= htmlspecialchars(strtoupper(substr($log['name'], 0, 1))) ?>
+                            <tbody>
+                                <?php if (empty($checkinLog)): ?>
+                                    <tr><td colspan="3" class="text-center text-secondary py-4">No check-ins yet</td></tr>
+                                <?php else: ?>
+                                    <?php foreach ($checkinLog as $log): ?>
+                                        <tr>
+                                            <!-- name -->
+                                            <td class="fw-semibold">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <div class="avatar d-flex justify-content-center align-items-center me-1">
+                                                        <?= htmlspecialchars(strtoupper(substr($log['name'], 0, 1))) ?>
+                                                    </div>
+                                                    <span><?= htmlspecialchars($log['name']) ?></span>
                                                 </div>
-                                                <span><?= htmlspecialchars($log['name']) ?></span>
-                                            </div>
-                                        </td>
+                                            </td>
 
-                                        <!-- date and time -->
-                                        <td><?= htmlspecialchars(date('d-m-Y', strtotime($log['checkin_time']))) ?></td>
-                                        <td><?= htmlspecialchars(date('g:i A', strtotime($log['checkin_time']))) ?></td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
+                                            <!-- date and time -->
+                                            <td class="text-secondary"><?= htmlspecialchars(date('d-m-Y', strtotime($log['checkin_time']))) ?></td>
+                                            <td class="text-secondary"><?= htmlspecialchars(date('g:i A', strtotime($log['checkin_time']))) ?></td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

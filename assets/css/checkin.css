@@ -76,7 +76,31 @@
 
 /* checkin log */
 .checkin-log {
+    /* border: 1px solid black; */
+}
+
+.table-wrapper {
     border: 1px solid black;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+    background-color: #000;
+    color: #FFFFFF;
+}
+
+.table-content thead {
+    border-bottom: 1px solid #f0f0f0a2;
+}
+
+.table-content tbody tr {
+    border-bottom: 1px solid rgba(211, 211, 211, 0.172);
+}
+
+.table-content tbody tr:last-child {
+    border: none;
+}
+
+.table-content th, .table-wrapper td {
+    padding: 10px;
 }
 
 /* avatar */
