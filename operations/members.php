@@ -192,8 +192,11 @@ $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     </select>
                                 </div>
                             </div>
-
-                            <button type="submit" class="btn btn-outline-light mt-3"><?= $editMember ? 'Update' : 'Register' ?> Member</button>
+                            
+                            <div class="mt-5">
+                                <button type="submit" class="btn btn-outline-light me-2"><?= $editMember ? 'Update' : 'Register' ?> Member</button>
+                                <a href="/members" class="btn btn-light">Cancel</a>
+                            </div>
                         </form>
                     </div>
                 <?php endif; ?>
@@ -214,6 +217,7 @@ $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <th>Contact</th>
                                 <th>Plan</th>
                                 <th>Joined</th>
+                                <th>Exp</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -249,6 +253,9 @@ $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                         <!-- joined -->
                                         <td class="joined"><?= htmlspecialchars(date('d-m-Y', strtotime($member['join_date']))) ?></td>
+
+                                        <!-- expiry date -->
+                                        <td class="expired"><?= htmlspecialchars(date('d-m-Y', strtotime($member['expiry_date']))) ?></td>
 
                                         <!-- status -->
                                         <td>

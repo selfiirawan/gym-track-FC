@@ -80,7 +80,7 @@ tbody tr:last-child {
     border: none;
 }
 
-.member-table .contact, .plan, .joined {
+.member-table .contact, .plan, .joined, .expired {
     font-size: 0.9rem;
 }
 
@@ -110,6 +110,3 @@ tbody tr:last-child {
     color: #000 !important;
 }
 
-.member-table, table, th, td {
-    /* border: 1px solid black; */
-}

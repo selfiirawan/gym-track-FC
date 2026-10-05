@@ -67,6 +67,45 @@ $paymentHistory = $db->query("
     ORDER BY p.payment_date DESC
 ")->fetchAll(PDO::FETCH_ASSOC);
 
+// form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset(($_POST['member_id']))) {
+        $memberId = $_POST['member_id'];
+        $amount = $_POST['amount'];
+        $method = $_POST['method'];
+        $status = $_POST['status'];
+        $paymentDate = date('Y-m-d');
+
+        // get curent expiry date and plan
+        $memberStmt = $db->prepare("SELECT expiry_date, plan_id FROM members WHERE member_id = ?");
+        $memberStmt->execute([$memberId]);
+        $member = $memberStmt->fetch(PDO::FETCH_ASSOC);
+
+        // get plan's duration
+        $planStmt = $db->prepare("SELECT duration_days FROM membership_plans WHERE plan_id = ?");
+        $planStmt->execute([$member['plan_id']]);
+        $duration = $planStmt->fetchColumn();
+
+        // decide the base date to extend from
+        $baseDate = (strtotime($member['expiry_date']) >= strtotime('today')) 
+            ? $member['expiry_date']  // still active - extend from the expiry date
+            : date('Y-m-d');          // already expired - extend from the current date
+
+        $newExpiryDate = date('Y-m-d', strtotime($baseDate . " +$duration days"));
+
+        // record payment
+        $insert = $db->prepare("INSERT INTO payments (member_id, amount, payment_date, new_expiry_date, method, status) VALUES (?, ?, ?, ?, ?, ?)");
+        $insert->execute([$memberId, $amount, $paymentDate, $newExpiryDate, $method, $status]);
+
+        // only extend is the payment succeeded
+        if ($status === 'paid') {
+            $update = $db->prepare("UPDATE members SET expiry_date = ? WHERE member_id = ?");
+            $update->execute([$newExpiryDate, $memberId]);
+        }
+
+        header('Location: /payments');
+        exit;
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -131,18 +170,18 @@ $paymentHistory = $db->query("
                 <!-- search box -->
                 <?php if ($showForm && !$selectedMember): ?>
                     <div class="payment-form mx-3 p-3">
-                        <p class="fw-bold">Find member to record a payment</p>
+                        <p class="fw-bold fs-5">Find member to record a payment</p>
                         <form action="/payments" method="GET" class="mb-3 gap-2 d-flex">
                             <input type="hidden" name="action" value="new">
                             <input type="text" class="form-control" name="member_q" value="<?= htmlspecialchars($memberSearch) ?>" placeholder="Search member by name...">
-                            <button type="submit" class="btn btn-outline-dark">Search</button>
+                            <button type="submit" class="btn btn-dark searchBtn">Search</button>
                         </form>
 
                         <!-- after search -->
                         <?php foreach ($memberResult as $member): ?>
-                            <div class="d-flex justify-content-between p-2">
-                                <span><?= htmlspecialchars($member['name']) ?> - <?= htmlspecialchars($member['contact']) ?></span>
-                                <a href="/payments?action=new&member_id=<?= $member['member_id'] ?>" class="btn btn-sm btn-outline-dark">Select</a>
+                            <div class="d-flex justify-content-between p-2 search-result">
+                                <p class="m-0"><?= htmlspecialchars($member['name']) ?> - <span class="text-secondary"><?= htmlspecialchars($member['contact']) ?></span></p>
+                                <a href="/payments?action=new&member_id=<?= $member['member_id'] ?>" class="btn btn-sm btn-outline-dark selectBtn">Select</a>
                             </div>
                         <?php endforeach; ?>
                     </div>
@@ -151,14 +190,14 @@ $paymentHistory = $db->query("
                 <!-- payment form -->
                 <?php if ($selectedMember): ?>
                     <div class="payment-form mx-3 p-3">
-                        <p class="fw-bold">Record payment for <?= htmlspecialchars($selectedMember['name']) ?></p>
+                        <p class="fw-bold fs-5">Record payment for <?= htmlspecialchars($selectedMember['name']) ?></p>
 
                         <form action="/payments" method="POST" class="row g-3">
                             <input type="hidden" name="member_id" value="<?= $selectedMember['member_id'] ?>">
 
                             <div class="col-md-4">
                                 <label class="form-label">Amount (RM)</label>
-                                <input type="number" class="form-control" name="amount" class="form-control" required>
+                                <input type="number" min="0" class="form-control" name="amount" class="form-control" required>
                             </div>
 
                             <div class="col-md-4">
@@ -181,8 +220,8 @@ $paymentHistory = $db->query("
                                 </select>
                             </div>
 
-                            <div class="d-flex">
-                                <button type="submit" class="btn btn-outline-dark">Record Payment</button>
+                            <div class="d-flex mt-5">
+                                <button type="submit" class="btn btn-dark me-3">Record Payment</button>
                                 <a href="/payments" class="btn btn-outline-dark">Cancel</a>
                             </div>
                         </form>
@@ -190,17 +229,17 @@ $paymentHistory = $db->query("
                 <?php endif; ?>
 
                 <!-- payment history  -->
-                <div class="my-5 payment-history">
-                    <p>Payment History</p>
+                <div class="my-5 payment-history mx-2">
+                    <p class="fw-bold title ps-2">Payment History</p>
 
                     <!-- table -->
-                    <div class="table-wrapper">
-                        <table class="table-conten w-100">
+                    <div class="table-wrapper p-3">
+                        <table class="table-content w-100">
                             <thead>
                                 <tr>
                                     <th>Member</th>
                                     <th>Plan</th>
-                                    <th>Amount</th>
+                                    <th>Amount (RM)</th>
                                     <th>Method</th>
                                     <th>Date</th>
                                     <th>Status</th>
@@ -226,7 +265,7 @@ $paymentHistory = $db->query("
                                             <td class="text-secondary"><?= htmlspecialchars($payment['plan_name'] ?? '-') ?></td>
 
                                             <!-- amount -->
-                                            <td>RM <?= htmlspecialchars(number_format($payment['amount'], 0)) ?></td>
+                                            <td><?= htmlspecialchars(number_format($payment['amount'], 2)) ?></td>
 
                                             <!-- payment method -->
                                             <td class="text-secondary"><?= htmlspecialchars($payment['method'] ?? '-') ?></td>
