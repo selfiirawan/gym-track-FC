@@ -80,7 +80,7 @@ Mostly on the backend: the PHP logic and the SQL queries.
 
 ---
 
-## Day 4 — Date: 03/10/2026
+## Day 4 — Date: 01/10/2026
 
 ### What I planned to do today
 - Complete the `members.php` page.
@@ -108,19 +108,24 @@ Mostly on the backend and the SQL queries.
 
 ---
 
-## Day 5 — Date: ____
+## Day 5 — Date: 03/10/2026
 
 ### What I planned to do today
-
+- Build the edit button in `members.php`.
+- Start the `plans.php` page.
 
 ### What I actually did
-
+- Completed the edit button in `members.php`.
+- Started `plans.php`: the backend is done, only the front end is left.
+- Decided to add a `features` column to `membership_plans` for per-plan benefit lists, using `ALTER TABLE`.
+- Decided to make the membership plans page available to staff too, while keeping manage access for admin only.
 
 ### Blockers / Challenges
-
+The logic for listing out each plan's benefits.
 
 ### What I learned
-
+- `explode(',', $string)` splits a stored comma-separated string into an array.
+- `trim()` is still needed alongside it to clean up whitespace.
 
 ---
 
