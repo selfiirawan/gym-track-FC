@@ -129,19 +129,22 @@ The logic for listing out each plan's benefits.
 
 ---
 
-## Day 6 — Date: ____
+## Day 6 — Date: 04/10/2026
 
 ### What I planned to do today
-
+Complete the front end for `plans.php` and start the check-in page.
 
 ### What I actually did
-
+- Completed the front end for `plans.php`, so `plans.php` is now fully done.
+- Started the check-in page (`checkin.php`)and completed its backend logic.
 
 ### Blockers / Challenges
-
+Mostly on the backend, especially the query for the check-in page.
 
 ### What I learned
-
+- `number_format()`
+- `date('g:i A', ...)` for formatting times
+- How to create a search bar for the check-in page
 
 ---
 
