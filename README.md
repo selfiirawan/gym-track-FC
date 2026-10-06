@@ -148,19 +148,29 @@ Mostly on the backend, especially the query for the check-in page.
 
 ---
 
-## Day 7 — Date: ____
+## Day 7 — Date: 05/10/2026
 
 ### What I planned to do today
-
+- Build the front end for `checkin.php`
+- Create a dynamic search bar
+- Start `payments.php`
 
 ### What I actually did
-
+- Completed the full stack for `checkin.php`, including the dynamic search bar
+- Started and completed `payments.php`
+- Still to do: modify the search bar in the navbar
 
 ### Blockers / Challenges
-
+Mostly on the backend and the SQL queries
 
 ### What I learned
-
+- How to create a dynamic search bar and the logic behind it
+- When to wrap output with `htmlspecialchars()` and when it isn't needed
+- `ucfirst()`, which capitalizes only the first letter
+- How to build the form and handle form submission specifically on the payment page
+- The key decision for renewals: extend from today, or from the current expiry date?
+- If the plan hasn't expired yet (early renewal), add the time on top of the existing expiry date, so the member doesn't lose their remaining days.
+- If the plan has already expired, extend from today instead.
 
 ---
 
