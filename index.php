@@ -53,6 +53,10 @@ switch ($path) {
         include 'auth/logout.php';
         break;
 
+    case 'staff':
+        include 'admin/staff.php';
+        break;
+
     default:
         include '404.php';
         break;

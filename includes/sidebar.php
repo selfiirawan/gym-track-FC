@@ -89,21 +89,21 @@ $role = $roleLabel[$_SESSION['user']['role']] ?? 'Guest';
         <!-- visible in admin only -->
         <?php if (isAdmin()): ?>
             <li>
-                <a href="/admin/classes">
+                <a href="/classes">
                     <i class="bi bi-calendar-plus"></i>
                     <span>Classes</span>
                 </a>
             </li>
 
             <li>
-                <a href="/admin/staff">
+                <a href="/staff">
                     <i class="bi bi-person-badge"></i>
                     <span>Staff</span>
                 </a>
             </li>
             
             <li>
-                <a href="/admin/reports">
+                <a href="/reports">
                     <i class="bi bi-bar-chart-line"></i>
                     <span>Reports</span>
                 </a>

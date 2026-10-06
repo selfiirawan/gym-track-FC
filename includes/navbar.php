@@ -9,7 +9,12 @@ if ($currentPath === 'checkin') {
     $searchAction = 'checkin';
     $searchParam = 'log';
     $searchPlaceholder = 'Search check-in log...';
+} else if ($currentPath === 'payments') {
+    $searchAction = 'payments';
+    $searchParam = 'pay';
+    $searchPlaceholder = 'Search payment history...';
 }
+
 ?>
 
 <div class="content-navbar d-flex justify-content-between align-items-center pt-2">

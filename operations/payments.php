@@ -59,13 +59,26 @@ $failed = $db->query("
 ")->fetchColumn();
 
 // payment history 
-$paymentHistory = $db->query("
+$paySearch = $_GET['pay'] ?? '';
+
+$paySql = "
     SELECT p.amount, p.payment_date, p.status, p.method, m.name AS member_name, pl.plan_name
     FROM payments p
     JOIN members m ON p.member_id = m.member_id
     LEFT JOIN membership_plans pl ON m.plan_id = pl.plan_id
-    ORDER BY p.payment_date DESC
-")->fetchAll(PDO::FETCH_ASSOC);
+";
+$payParams = [];
+
+if ($paySearch !== '') {
+    $paySql .= " WHERE m.name LIKE ?";
+    $payParams[] = '%' . $paySearch . '%';
+}
+
+$paySql .= " ORDER BY p.payment_date DESC";
+
+$payStmt = $db->prepare($paySql);
+$payStmt->execute($payParams);
+$paymentHistory = $payStmt->fetchAll(PDO::FETCH_ASSOC);
 
 // form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset(($_POST['member_id']))) {

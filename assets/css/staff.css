@@ -1,0 +1,26 @@
+/* header */
+.greeting h3, .greeting p {
+    margin: 0;
+}
+
+.greeting h3 {
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+.greeting p {
+    font-size: 1rem;
+}
+.add-btn a {
+    color: #000;
+    background-color: #FFFFFF;
+    border: 2px solid #000;
+    font-weight: bold;
+    border-radius: 20px;
+}
+
+.add-btn a:hover {
+    background-color: #27262a;
+    color: #FFFFFF;
+    border: 1px solid #FFFFFF;
+}
