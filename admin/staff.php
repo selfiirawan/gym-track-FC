@@ -15,12 +15,32 @@ if (!isAdmin()) {
 
 preventCaching();
 
+$searchStaff = $_GET['s'] ?? '';
+$searchResult = [];
+
+if ($searchStaff !== '') {
+    $stmt = $db->prepare("
+        SELECT u.user_id, u.name, u.email, u.role, sp.contact, sp.job_role, sp.status, sp.leave_start, sp.leave_end
+        FROM users u
+        JOIN staff_profiles sp
+        ON u.user_id = sp.user_id
+        WHERE u.name LIKE ?
+    ");
+    $stmt->execute(['%' . $searchStaff . '%']);
+    $searchResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
 // fetch staff 
-$staffs = $db->query("
-    SELECT u.user_id, u.name, u.email, u.role, sp.contact, sp.job_role, sp.status, sp.leave_start, sp.leave_end
-    FROM users u 
-    JOIN staff_profiles sp ON u.user_id = sp.user_id
-")->fetchAll(PDO::FETCH_ASSOC);
+if ($searchStaff !== '') {
+    $staffs = $searchResult;
+} else {
+    $staffs = $db->query("
+        SELECT u.user_id, u.name, u.email, u.role, sp.contact, sp.job_role, sp.status, sp.leave_start, sp.leave_end
+        FROM users u 
+        JOIN staff_profiles sp ON u.user_id = sp.user_id
+    ")->fetchAll(PDO::FETCH_ASSOC);
+}
 
 // to add new staff form
 $showAddForm = isset($_GET['action']) && $_GET['action'] === 'new';
@@ -78,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $leaveStart = null;
         $leaveEnd = null;
 
-        if ($status === 'on-leave') {
+        if ($status === 'on_leave') {
             $leaveStart = $_POST['leave_start'] ?? null;
             $leaveEnd = $_POST['leave_end'] ?? null;
         }
@@ -115,7 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $leaveStart = null;
         $leaveEnd = null;
 
-        if ($status === 'on-leave') {
+        if ($status === 'on_leave') {
             $leaveStart = $_POST['leave_start'] ?? null;
             $leaveEnd = $_POST['leave_end'] ?? null;
         }
@@ -299,15 +319,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <p>No staffs yet</p>
                     <?php else: ?>
                         <?php foreach ($staffs as $staff): ?>
-                            <div class="staff-card p-4">
-                                <p><?= htmlspecialchars($staff['name']) ?></p>
-                                <p><?= htmlspecialchars(ucfirst($staff['role'])) ?> - <?= htmlspecialchars($staff['job_role']) ?></p>
+                            <div class="staff-card py-3 px-4">
+                                <div class="d-flex justify-content-between header mb-2">
+                                    <div class="d-flex gap-2 align-items-center">
+                                        <div class="avatar d-flex justify-content-center align-items-center me-1 m-0">
+                                            <?= htmlspecialchars(strtoupper(substr($staff['name'], 0, 1))) ?>
+                                        </div>
+
+                                        <div>
+                                            <p class="fw-bold m-0 name"><?= htmlspecialchars($staff['name']) ?></p>
+                                            <p class="m-0 roles text-secondary m-0"><?= htmlspecialchars(ucfirst($staff['role'])) ?> - <?= htmlspecialchars($staff['job_role']) ?></p>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-end">
+                                        <p class="m-0 p-3 badge rounded-pill <?= $staff['status'] ?>"><?= htmlspecialchars(($staff['status'] === 'on_leave' ) ? 'On Leave' : 'Available') ?></p>
+
+                                        <?php if ($staff['status'] === 'on_leave'): ?>
+                                            <p class="m-0 text-secondary p-2 leave-date"><?= htmlspecialchars(date('d/m/Y', strtotime($staff['leave_start']))) ?> - <?= htmlspecialchars(date('d/m/Y', strtotime($staff['leave_end']))) ?></p>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+
+                                <p class="contact m-0 ms-2 mb-1">Contact:</p>
+                                <div class="contact-info d-flex justify-content-around p-2 py-2 rounded-4">
+                                    <p class="m-0 email"><?= htmlspecialchars($staff['email']) ?></p>
+                                    <p class="m-0 number"><?= htmlspecialchars($staff['contact']) ?></p>
+                                </div>
 
                                 <!-- edit delete btn -->
-                                <div class="mt-auto d-flex align-items-center">
+                                <div class="mt-3 d-flex align-items-center theBtn justify-content-end">
                                     <a href="/staff?edit=<?= $staff['user_id'] ?>" class="editBtn fw-bold">
-                                        <i class="bi bi-pencil text-secondary me-2"></i>
-                                        Edit
+                                        <i class="bi bi-pencil-square text-light me-2"></i>
                                     </a>
 
                                     <form action="/staff" method="POST" class="d-inline" onsubmit="return confirm('Remove this staff?');">
@@ -332,6 +375,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         status.addEventListener('change', function () {
             leaveDates.style.display = this.value === 'on_leave' ? 'flex' : 'none';
         });
+
+        if (status.value === 'on_leave') {
+            leaveDates.style.display = 'flex';
+        }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>

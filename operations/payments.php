@@ -58,7 +58,7 @@ $failed = $db->query("
     AND YEAR(payment_date) = YEAR(CURDATE())
 ")->fetchColumn();
 
-// payment history 
+// payment history and search on navbar
 $paySearch = $_GET['pay'] ?? '';
 
 $paySql = "

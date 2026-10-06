@@ -13,6 +13,10 @@ if ($currentPath === 'checkin') {
     $searchAction = 'payments';
     $searchParam = 'pay';
     $searchPlaceholder = 'Search payment history...';
+} else if ($currentPath === 'staff') {
+    $searchAction = 'staff';
+    $searchParam = 's';
+    $searchPlaceholder = 'Search for staff...';
 }
 
 ?>
