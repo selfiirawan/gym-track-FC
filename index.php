@@ -57,6 +57,14 @@ switch ($path) {
         include 'admin/staff.php';
         break;
 
+    case 'reports':
+        if (!isAdmin()) {
+            header('Location: /dashboard');
+            exit;
+        }
+        include 'admin/reports.php';
+        break;
+
     default:
         include '404.php';
         break;

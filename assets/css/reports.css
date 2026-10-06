@@ -1,0 +1,13 @@
+/* header */
+.greeting h3, .greeting p {
+    margin: 0;
+}
+
+.greeting h3 {
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+.greeting p {
+    font-size: 1rem;
+}
