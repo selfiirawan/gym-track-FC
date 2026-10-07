@@ -210,8 +210,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <!-- add staff form -->
                 <?php if ($showForm): ?>
-                    <div class="staff-form mx-3 p-3">
-                        <p class="fw-bold fs-5"><?= $editStaff ? 'Edit' : 'Add New' ?> Staff</p>
+                    <div class="staff-form m-3 mt-4 ">
+                        <p class="fw-bold fs-4"><?= $editStaff ? 'Edit' : 'Add New' ?> Staff</p>
 
                         <?php if ($error): ?>
                             <p class="alert alert-danger"><?= htmlspecialchars($error) ?></p>
@@ -314,7 +314,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php endif; ?>
 
                 <!-- staff cards -->
-                <div class="parents mx-3 my-5">
+                <div class="parents mx-2 my-5">
                     <?php if (empty($staffs)): ?>
                         <p>No staffs yet</p>
                     <?php else: ?>
@@ -322,10 +322,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <div class="staff-card py-3 px-4">
                                 <div class="d-flex justify-content-between header mb-2">
                                     <div class="d-flex gap-2 align-items-center">
+                                        <!-- avatar -->
                                         <div class="avatar d-flex justify-content-center align-items-center me-1 m-0">
                                             <?= htmlspecialchars(strtoupper(substr($staff['name'], 0, 1))) ?>
                                         </div>
 
+                                        <!-- name and role -->
                                         <div>
                                             <p class="fw-bold m-0 name"><?= htmlspecialchars($staff['name']) ?></p>
                                             <p class="m-0 roles text-secondary m-0"><?= htmlspecialchars(ucfirst($staff['role'])) ?> - <?= htmlspecialchars($staff['job_role']) ?></p>
@@ -333,15 +335,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     </div>
 
                                     <div class="text-end">
+                                        <!-- status -->
                                         <p class="m-0 p-3 badge rounded-pill <?= $staff['status'] ?>"><?= htmlspecialchars(($staff['status'] === 'on_leave' ) ? 'On Leave' : 'Available') ?></p>
 
+                                        <!-- leave dates -->
                                         <?php if ($staff['status'] === 'on_leave'): ?>
                                             <p class="m-0 text-secondary p-2 leave-date"><?= htmlspecialchars(date('d/m/Y', strtotime($staff['leave_start']))) ?> - <?= htmlspecialchars(date('d/m/Y', strtotime($staff['leave_end']))) ?></p>
                                         <?php endif; ?>
                                     </div>
                                 </div>
 
-                                <p class="contact m-0 ms-2 mb-1">Contact:</p>
+                                <!-- contact -->
+                                <p class="contact m-0 ms-2 my-1 mt-3">Contact:</p>
                                 <div class="contact-info d-flex justify-content-around p-2 py-2 rounded-4">
                                     <p class="m-0 email"><?= htmlspecialchars($staff['email']) ?></p>
                                     <p class="m-0 number"><?= htmlspecialchars($staff['contact']) ?></p>
