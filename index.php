@@ -65,6 +65,10 @@ switch ($path) {
         include 'admin/reports.php';
         break;
 
+    case 'classes':
+        include 'operations/classes.php';
+        break;
+
     default:
         include '404.php';
         break;

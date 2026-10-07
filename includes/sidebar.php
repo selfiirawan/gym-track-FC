@@ -47,17 +47,24 @@ $role = $roleLabel[$_SESSION['user']['role']] ?? 'Guest';
                 </a>
             </li>
 
-            <li>
+            <!-- <li>
                 <a href="/classes">
                     <i class="bi bi-calendar3"></i>
                     <span>Class Timetable</span>
                 </a>
-            </li>
+            </li> -->
 
             <li>
                 <a href="/plans">
                     <i class="bi bi-credit-card"></i>
                     <span>Membership Plans</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="/classes">
+                    <i class="bi bi-calendar-plus"></i>
+                    <span>Classes</span>
                 </a>
             </li>
         <?php endif; ?>
@@ -88,12 +95,6 @@ $role = $roleLabel[$_SESSION['user']['role']] ?? 'Guest';
 
         <!-- visible in admin only -->
         <?php if (isAdmin()): ?>
-            <li>
-                <a href="/classes">
-                    <i class="bi bi-calendar-plus"></i>
-                    <span>Classes</span>
-                </a>
-            </li>
 
             <li>
                 <a href="/staff">
