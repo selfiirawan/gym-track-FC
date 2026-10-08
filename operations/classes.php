@@ -10,6 +10,50 @@ if (isGuest()) {
 
 preventCaching();
 
+// search member
+$search = $_GET['q'] ?? '';
+$manageId = $_GET['manage'] ?? null;
+$results = [];
+
+if ($search != '') {
+    $stmt = $db->prepare("SELECT * FROM members WHERE name LIKE ?");
+    $stmt->execute(['%' . $search . '%']);
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+$errorDup = '';
+
+if (isset($_GET['error']) && $_GET['error'] === 'duplicate') {
+    $errorDup = 'This member is already booked for this class';
+}
+
+if (isset($_POST['member_id']) && isset($_POST['class_id'])) {
+
+    // check duplicates
+    $check = $db->prepare("SELECT booking_id FROM class_bookings WHERE member_id = ? AND class_id = ? AND status = 'booked'");
+    $check->execute([$_POST['member_id'], $_POST['class_id']]);
+
+    if ($check->fetch()) {
+        // has duplicate
+        header('Location: /classes?manage=' . $_POST['class_id'] . '&error=duplicate');
+        exit;
+    } else {
+        // no duplicate - add to booked
+        $insert = $db->prepare("INSERT INTO class_bookings (member_id, class_id, status) VALUES (?, ?, 'booked')");
+        $insert->execute([$_POST['member_id'], $_POST['class_id']]);
+        header('Location: /classes?manage=' . $_POST['class_id']);
+        exit;
+    }
+}
+
+// remove booking 
+if (isset($_POST['cancel_id'])) {
+    $cancel = $db->prepare("UPDATE class_bookings SET status = 'cancelled' WHERE booking_id = ?");
+    $cancel->execute([$_POST['cancel_id']]);
+    header('Location: /classes?manage=' . $_POST['class_id']);
+    exit;
+}
+
 // fetch classes and total booked for each class 
 $classes = $db->query("
     SELECT c.*, 
@@ -35,7 +79,7 @@ $showForm = $showAddForm || $editClass;
 $error = '';
 
 // add, edit, delete class
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['class_name'])) {
 
     // delete class
     if (isset($_POST['delete_id'])) {
@@ -168,53 +212,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php if (empty($classes)): ?>
                         <p class="text-secondary">No classes yet</p>
                     <?php else: ?>
+                        <!-- CARD -->
                         <?php foreach ($classes as $class): 
                             // slot left
                             $slotsLeft = $class['capacity'] - $class['slots_filled'];
                             $fillPercent = $class['capacity'] > 0 ? round(($class['slots_filled'] / $class['capacity']) * 100) : 0;
 
-                            $barColor = 'bg-success';
+                            $barColor = '';
                             if ($fillPercent >= 90) {
                                 $barColor = 'bg-danger';
                             } else if ($barColor >= 70) {
                                 $barColor = 'bg-warning';
+                            } else {
+                                $barColor = 'bg-success';
                             }
 
                             $isFull = $slotsLeft <= 0;
                         ?>
                             <div class="class-card p-4">
                                 <!-- class name and status badge -->
-                                <div>
-                                    <p><?= htmlspecialchars($class['class_name']) ?></p>
-                                    <span class="badge rounded-pill <?= $isFull ? 'badge-full' : 'badge-open' ?>">
+                                <div class="d-flex justify-content-between name-badge">
+                                    <p class="fw-bold fs-3 m-0"><?= htmlspecialchars($class['class_name']) ?></p>
+                                    <span class="p-2 px-3 badge rounded-pill align-content-center <?= $isFull ? 'badge-full' : 'badge-open' ?>">
                                         <?= $isFull ? 'Full' : 'Open' ?>
                                     </span>
                                 </div>
 
                                 <!-- instructor -->
-                                <p><?= htmlspecialchars($class['instructor']) ?></p>
+                                <p class="instructor m-0"><?= htmlspecialchars($class['instructor']) ?></p>
 
                                 <!-- day date and time -->
-                                <p>
-                                    <i class="bi bi-clock"></i>
+                                <p class="m-0 mt-2 date-n-time text-secondary">
+                                    <i class="bi bi-clock me-1"></i>
                                     <?= htmlspecialchars(date('d/m/Y (D), g:i A', strtotime($class['schedule_time']))) ?>
                                 </p>
 
                                 <!-- capacity and slots left -->
-                                <div class="d-flex justify-content-between mb-1">
-                                    <p>Capacity: <?= htmlspecialchars($class['slots_filled']) ?>/<?= htmlspecialchars($class['capacity']) ?></p>
-                                    <p class="small <?= $isFull ? 'text-danger' : 'text-secondary' ?>"><?= max($slotsLeft, 0) ?> slots left</p>
+                                <div class="d-flex justify-content-between mt-3 mb-1 cap-slot">
+                                    <p class="m-0 text-secondary">Capacity: <?= htmlspecialchars($class['slots_filled']) ?>/<?= htmlspecialchars($class['capacity']) ?></p>
+                                    <p class="small m-0 <?= $isFull ? 'text-danger' : 'text-secondary' ?>"><?= max($slotsLeft, 0) ?> slots left</p>
                                 </div>
 
                                 <!-- progress bar -->
-                                <div class="progress" style="height: 5px;">
+                                <div class="progress mb-3" style="height: 5px;">
                                     <div class="progress-bar <?= $barColor ?>" style="width: <?= $fillPercent ?>%;"></div>
                                 </div>
 
                                 <!-- buttons -->
                                 <div class="mt-auto d-flex align-items-center gap-2">
                                     <!-- manage button -->
-                                    <button type="button" class="btn btn-dark flex-grow-1" data-bs-toggle="modal" data-bs-target="#manageModal<?= $class['class_id'] ?>">Manage</button>
+                                    <button type="button" class="btn btn-dark flex-grow-1 me-2" data-bs-toggle="modal" data-bs-target="#manageModal<?= $class['class_id'] ?>">Manage</button>
 
                                     <!-- edit and delete btn. only admin -->
                                     <?php if (isAdmin()): ?>
@@ -231,7 +278,97 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <?php endif; ?>
                                 </div>
                             </div>
+                        <?php endforeach; ?>
 
+                        <!-- MODAL STARTS HERE -->
+                        <?php foreach ($classes as $class): 
+                            // slots left
+                            $slotsLeft = $class['capacity'] - $class['slots_filled']
+                        ?>
+                            <!-- manage form -->
+                            <div class="modal fade" id="manageModal<?= $class['class_id'] ?>" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <!-- header -->
+                                        <div class="modal-header">
+                                            <p class="m-0 fw-bold fs-4"><?= htmlspecialchars($class['class_name']) ?></p>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+
+                                        <div class="modal-body">
+                                            <p class="m-0 text-secondary text-end capacity"><?= htmlspecialchars(max($slotsLeft, 0)) ?>/<?= htmlspecialchars($class['capacity']) ?> slots left</p>
+                                            <!-- search form -->
+                                            <p class="m-0 ps-1 text-secondary">Book a member to this class</p>
+                                            <form action="/classes" method="GET" class="mb-3 gap-2 d-flex">
+                                                <input type="hidden" name="manage" value="<?= $class['class_id'] ?>">
+                                                <input type="text" name="q" class="form-control" value="<?= htmlspecialchars($search) ?>" placeholder="Search member by name...">
+                                                <button type="submit" class="btn btn-dark">Search</button>
+                                            </form>
+
+                                            <!-- duplicate -->
+                                            <?php if ($errorDup !== ''): ?>
+                                                <div class="alert alert-danger"><?= $errorDup ?></div>
+                                            <?php endif; ?>
+
+                                            <!-- result of search -->
+                                            <?php if ($search !== ''): ?>
+                                                <?php if (empty($results)): ?>
+                                                    <p class="text-secondary">Member not found</p>
+                                                <?php else: ?>
+                                                    <?php foreach ($results as $member): ?>
+                                                        <div class="search-result d-flex justify-content-between align-items-center p-2 px-3 mb-2">
+                                                            <p class="m-0">
+                                                                <?= htmlspecialchars($member['name']) ?> - 
+                                                                <span class="text-secondary contact"><?= htmlspecialchars($member['contact']) ?>, <?= htmlspecialchars($member['email'] ?? 'no email') ?></span>
+                                                            </p>
+
+                                                            <!-- book button -->
+                                                            <form action="/classes" method="POST">
+                                                                <input type="hidden" name="member_id" value="<?= $member['member_id'] ?>">
+                                                                <input type="hidden" name="class_id" value="<?= $class['class_id'] ?>">
+                                                                <button type="submit" class="btn btn-outline-dark p-1 px-2 btn-sm">Book</button>
+                                                            </form>
+                                                        </div>
+                                                    <?php endforeach; ?>
+                                                <?php endif; ?>
+                                            <?php endif; ?>
+
+                                            <!-- booked member -->
+                                            <?php 
+                                            $bookedStmt = $db->prepare("
+                                                SELECT cb.booking_id, m.name, m.contact, m.email
+                                                FROM class_bookings cb
+                                                JOIN members m ON m.member_id = cb.member_id
+                                                WHERE cb.class_id = ? AND cb.status = 'booked' 
+                                            ");
+                                            $bookedStmt->execute([$class['class_id']]);
+                                            $bookedMembers = $bookedStmt->fetchAll(PDO::FETCH_ASSOC);
+                                            ?>
+
+                                            <p class="m-0 mb-2 fw-bold text-secondary ps-1">Booked members</p>
+                                            <?php if (empty($bookedMembers)): ?>
+                                                <p class="text-secondary small">No one booked yet</p>
+                                            <?php else: ?>
+                                                <?php foreach ($bookedMembers as $booking): ?>
+                                                    <div class="d-flex justify-content-between align-items-center p-2 px-3 booked mb-2">
+                                                        <p class="m-0 ">
+                                                            <?= htmlspecialchars($booking['name']) ?> |  
+                                                            <span class="text-secondary contact"><?= htmlspecialchars($booking['contact']) ?>, <?= htmlspecialchars($booking['email'] ?? 'no email') ?></span>
+                                                        </p>
+
+                                                        <!-- remove button -->
+                                                        <form action="/classes" method="POST">
+                                                            <input type="hidden" name="cancel_id" value="<?= $booking['booking_id'] ?>">
+                                                            <input type="hidden" name="class_id" value="<?= $class['class_id'] ?>">
+                                                            <button type="submit" class="btn btn-outline-danger btn-sm">Remove</button>
+                                                        </form>
+                                                    </div>
+                                                <?php endforeach; ?>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </div>
@@ -240,5 +377,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+    <?php if ($manageId): ?>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const modalEl = document.getElementById('manageModal<?= $manageId ?>');
+                if (modalEl) {
+                    const modal = new bootstrap.Modal(modalEl);
+                    modal.show();
+                }
+            });
+        </script>
+    <?php endif; ?>
 </body>
 </html>

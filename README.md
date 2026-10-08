@@ -174,19 +174,25 @@ Mostly on the backend and the SQL queries
 
 ---
 
-## Day 8 — Date: ____
+## Day 8 — Date: 06/10/2026
 
 ### What I planned to do today
-
+- Modify the navbar search bar on the payments page
+- Start `staff.php`
 
 ### What I actually did
-
+- Modified the search bar in `payments.php`
+- Started `staff.php`
+- Created a new table for staff profiles
+- Completed the backend for `staff.php`
 
 ### Blockers / Challenges
-
+Mostly on the backend and the SQL queries
 
 ### What I learned
-
+- How to modify the search bar depending on which page it is used on
+- `beginTransaction()`, `commit()`, and `rollBack()`
+- How to make sure staff can log in to the system once an admin adds them
 
 ---
 

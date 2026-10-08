@@ -32,3 +32,50 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
 }
+
+.class-card {
+    /* box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.15); */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+    border: 1px solid #27262a;
+    background-color: #000;
+    color: #FFFFFF;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.class-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(116, 114, 114, 0.41);
+    /* border-color: rgba(29, 28, 28, 0.805); */
+}
+
+.date-n-time {
+    font-size: 0.9rem;
+}
+
+/* badge */
+.badge-open {
+    background: rgba(46, 125, 50, 0.2);
+    color: #4caf50;
+}
+
+.badge-full {
+    background: rgba(198, 40, 40, 0.2);
+    color: #ef5350;
+}
+
+/* modal */
+.modal-body .capacity, .modal-body .contact {
+    font-size: 0.9rem;
+}
+
+.modal-body .booked {
+    border-radius: 10px;
+    background-color: #27262a;
+    color: #FFFFFF;
+}
+
+.search-result {
+    border: 1px solid #27262a;
+    border-radius: 10px;
+}
