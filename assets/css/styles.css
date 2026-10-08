@@ -11,9 +11,6 @@ body {
     height: 100%;
 }
 
-.content p, form, .content{
-    /* border: 1px solid white; */
-}
 
 .main-content {
     display: flex;

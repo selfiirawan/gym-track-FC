@@ -123,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } catch (Exception $e) {
 
             $db->rollBack();
-            $error = 'Failed to update staff.';
+            $error = 'Failed to update staff';
 
         }
     } else {
@@ -149,21 +149,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else if ($password !== $confirmPassword) {
             $error = 'Password does not match!';
         } else {
-            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            try {
 
-            // insert to users table
-            $insertUser = $db->prepare("INSERT INTO users (name, email, password_hash, role) VALUES (?,?,?,?)");
-            $insertUser->execute([$name, $email, $hashedPassword, $systemRole]);
+                $db->beginTransaction();
 
-            // newly created user's ID
-            $userId = $db->lastInsertId();
-            
-            // insert to staff profiles table
-            $insertStaff = $db->prepare("INSERT INTO staff_profiles (user_id, contact, job_role, status, leave_start, leave_end) VALUES (?, ?, ?, ?, ?, ?)");
-            $insertStaff->execute([$userId, $contact, $role, $status, $leaveStart, $leaveEnd]);
+                $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-            header('Location: /staff');
-            exit;
+                // insert to users table
+                $insertUser = $db->prepare("INSERT INTO users (name, email, password_hash, role) VALUES (?,?,?,?)");
+                $insertUser->execute([$name, $email, $hashedPassword, $systemRole]);
+
+                // newly created user's ID
+                $userId = $db->lastInsertId();
+                
+                // insert to staff profiles table
+                $insertStaff = $db->prepare("INSERT INTO staff_profiles (user_id, contact, job_role, status, leave_start, leave_end) VALUES (?, ?, ?, ?, ?, ?)");
+                $insertStaff->execute([$userId, $contact, $role, $status, $leaveStart, $leaveEnd]);
+
+                $db->commit();
+
+                header('Location: /staff');
+                exit;
+
+            } catch (Exception $e) {
+
+                $db->rollBack();
+                $error = 'Failed to add staff';
+            }
         }
     }
 }

@@ -345,9 +345,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['class_name'])) {
                                             $bookedMembers = $bookedStmt->fetchAll(PDO::FETCH_ASSOC);
                                             ?>
 
-                                            <p class="m-0 mb-2 fw-bold text-secondary ps-1">Booked members</p>
+                                            <p class="m-0 mt-3 mb-2 fw-bold text-secondary ps-1">Booked members</p>
                                             <?php if (empty($bookedMembers)): ?>
-                                                <p class="text-secondary small">No one booked yet</p>
+                                                <p class="ms-1 text-secondary small">No one booked yet</p>
                                             <?php else: ?>
                                                 <?php foreach ($bookedMembers as $booking): ?>
                                                     <div class="d-flex justify-content-between align-items-center p-2 px-3 booked mb-2">

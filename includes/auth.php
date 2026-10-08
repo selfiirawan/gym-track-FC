@@ -43,3 +43,20 @@ function isMember() {
 function isGuest() {
     return ! isset($_SESSION['user']);
 }
+
+// get logged in member db 
+function getCurrentMember($db) {
+    if (!isset($_SESSION['user']['id'])) {
+        return null;
+    }
+
+    $stmt = $db->prepare("
+        SELECT m.*, p.plan_name, DATEDIFF(expiry_date, CURDATE()) AS days_left 
+        FROM members m
+        JOIN membership_plans p ON m.plan_id = p.plan_id
+        WHERE m.user_id = ?
+    ");
+    $stmt->execute([$_SESSION['user']['id']]);
+
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}

@@ -66,7 +66,11 @@ switch ($path) {
         break;
 
     case 'classes':
-        include 'operations/classes.php';
+        if (isMember()) {
+            include 'member/classes.php';
+        } else {
+            include 'operations/classes.php';
+        }
         break;
 
     default:

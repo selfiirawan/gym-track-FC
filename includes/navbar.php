@@ -1,4 +1,5 @@
 <?php
+
 $currentPath = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 
 $searchAction = 'members';
@@ -23,12 +24,14 @@ if ($currentPath === 'checkin') {
 
 <div class="content-navbar d-flex justify-content-between align-items-center pt-2">
     <!-- search bar -->
-    <form action="/<?= htmlspecialchars($searchAction) ?>" method="GET" class="d-flex align-items-center gap-2 h-100 ms-3 w-25 p-3 pb-0 search-form">
-        <i class="bi bi-search m-0 p-0"></i>
-        <input type="search" name="<?= $searchParam ?>" class="form-control text-dark m-0 p-1 ps-3 bg-transparent" placeholder="<?= $searchPlaceholder ?>">
-    </form>
+    <?php if (!isMember()): ?>
+        <form action="/<?= htmlspecialchars($searchAction) ?>" method="GET" class="d-flex align-items-center gap-2 h-100 ms-3 w-25 p-3 pb-0 search-form">
+            <i class="bi bi-search m-0 p-0"></i>
+            <input type="search" name="<?= $searchParam ?>" class="form-control text-dark m-0 p-1 ps-3 bg-transparent" placeholder="<?= $searchPlaceholder ?>">
+        </form>
+    <?php endif; ?>
 
-    <div class="d-flex align-items-center right-nav">
+    <div class="d-flex align-items-center right-nav ms-auto">
         <!-- <a href="#" class="">
             <i class="bi bi-bell me-2 p-0"></i>
             === add circle if there's notif ===
@@ -47,7 +50,7 @@ if ($currentPath === 'checkin') {
 
                 <!-- user's name and role -->
                 <div class="user-role d-flex flex-column text-start text-dark pe-2">
-                    <p class="fw-bold"><?= htmlspecialchars($_SESSION['user']['name'] ?? '') ?></p>
+                    <p class="fw-bold <?= (isMember()) ? 'text-white' : '' ?>"><?= htmlspecialchars($_SESSION['user']['name'] ?? '') ?></p>
                     <p class="text-secondary text-capitalize navbar-role"><?= htmlspecialchars($_SESSION['user']['role'] ?? 'Guest') ?></p>
                 </div>
             </button>

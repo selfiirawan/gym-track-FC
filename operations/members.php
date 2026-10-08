@@ -33,8 +33,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // delete member
     if (isset($_POST['delete_id'])) {
-        $delete = $db->prepare("DELETE FROM members WHERE member_id = ?");
-        $delete->execute([$_POST['delete_id']]);
+        // check if member in members DB 
+        $checkMember = $db->prepare("SELECT user_id FROM members WHERE member_id = ?");
+        $checkMember->execute([$_POST['delete_id']]);
+        $memberUserId = $checkMember->fetchColumn();
+
+        // 1. delete from members table
+        $deleteMember = $db->prepare("DELETE FROM members WHERE member_id = ?");
+        $deleteMember->execute([$_POST['delete_id']]);
+
+        // 2. delete from users table
+        if ($memberUserId) {
+            $deleteUser = $db->prepare("DELETE FROM users WHERE user_id = ?");
+            $deleteUser->execute([$memberUserId]);
+        }
         header('Location: /members');
         exit;
     }
@@ -55,19 +67,65 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $expiryDate = date('Y-m-d', strtotime($joinedDate . "+$duration days"));
 
     if (isset($_POST['member_id'])) {
-        // edit 
-        $update = $db->prepare("UPDATE members SET name=?, contact=?, email=?, join_date=?, plan_id=?, expiry_date=? WHERE member_id=?");
-        $update->execute([$name, $contact, $email, $joinedDate, $planId, $expiryDate, $_POST['member_id']]);
-    } else {
-        // add
+        // edit member
         try {
-            $insert = $db->prepare("INSERT INTO members (name, contact, email, join_date, plan_id, expiry_date, registered_by) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            $insert->execute([$name, $contact, $email, $joinedDate, $planId, $expiryDate, $registerBy]);
+            $db->beginTransaction();
+
+            // update members table
+            $updateMember = $db->prepare("UPDATE members SET name=?, contact=?, email=?, join_date=?, plan_id=?, expiry_date=? WHERE member_id=?");
+            $updateMember->execute([$name, $contact, $email, $joinedDate, $planId, $expiryDate, $_POST['member_id']]);
+
+            // update users table
+            $updateUser = $db->prepare("UPDATE users SET name=?, email=? WHERE user_id = (SELECT user_id FROM members WHERE member_id = ?)");
+            $updateUser->execute([$name, $email, $_POST['member_id']]);
+
+            $db->commit();
+
         } catch (PDOException $e) {
+            $db->rollBack();
+
             if ($e->getCode() == 23000) {
-                $error = 'A member with this email already exists.';
+                $error = 'This email is already registered';
             } else {
                 throw $e;
+            }
+        }
+    } else {
+        // add new member
+        $password = $_POST['password'];
+        $confirmPassword = $_POST['confirm_password'];
+
+        if ($password !== $confirmPassword) {
+            $error = 'Password does not match!';
+        } else {
+            try {
+                $db->beginTransaction();
+
+                $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+                // 1. insert to users table
+                $insertUser = $db->prepare("INSERT INTO users (name, email, password_hash, role) VALUES (?, ?, ?, 'member')");
+                $insertUser->execute([$name, $email, $hashedPassword]);
+
+                // new member user id
+                $newUserId = $db->lastInsertId();
+
+                // 2. insert to members table
+                $insertMember = $db->prepare("INSERT INTO members (user_id, name, contact, email, join_date, plan_id, expiry_date, registered_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                $insertMember->execute([$newUserId, $name, $contact, $email, $joinedDate, $planId, $expiryDate, $registerBy]);
+
+                $db->commit();
+
+            } catch (PDOException $e) {
+                if ($db->inTransaction()) {
+                    $db->rollBack();
+                }
+
+                if ($e->getCode() == 23000) {
+                    $error = 'This email is already registered';
+                } else {
+                    throw $e;
+                }
             }
         }
     }
@@ -149,20 +207,27 @@ $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </div>
                 <?php endif; ?>
 
-                <!-- add member form -->
+                <!-- add / edit member form -->
                 <?php if ($showForm): ?>
                     <div class="add-member-form my-3 p-3 pb-0">
+                        <?php if ($error): ?>
+                            <p class="alert alert-danger"><?= htmlspecialchars($error) ?></p>
+                        <?php endif; ?>
+
                         <form action="/members" method="POST" class="px-5 py-4">
+                            <p class="fw-bold fs-4 ms-1"><?= $editMember ? 'Edit' : 'Add New' ?> Member</p>
 
                             <?php if ($editMember): ?>
                                 <input type="hidden" name="member_id" value="<?= $editMember['member_id'] ?>">
                             <?php endif; ?>
 
+                            <!-- name -->
                             <div class="mb-3 ">
                                 <label class="form-label" for="new-name">Name</label>
                                 <input type="text" id="new-name" class="form-control" name="name" value="<?= htmlspecialchars($editMember['name'] ?? '') ?>" placeholder="New member's name" required>
                             </div>
 
+                            <!-- contact and email -->
                             <div class="mb-3 row ">
                                 <div class="col">
                                     <label class="form-label" for="contact">Contact No.</label>
@@ -174,6 +239,7 @@ $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 </div>
                             </div>
 
+                            <!-- joined date and membership plan -->
                             <div class="mb-3 row ">
                                 <div class="col">
                                     <label class="form-label" for="joined-date">Joined Date</label>
@@ -192,7 +258,25 @@ $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     </select>
                                 </div>
                             </div>
+
+                            <!-- password - only for add member -->
+                            <?php if (!$editMember): ?>
+                                <div class="row">
+                                    <!-- create password -->
+                                    <div class="col">
+                                        <label class="form-label">Create Password</label>
+                                        <input type="password" class="form-control" name="password" required>
+                                    </div>
+
+                                    <!-- confirm password -->
+                                    <div class="col">
+                                        <label class="form-label">Confirm Password</label>
+                                        <input type="password" class="form-control" name="confirm_password" required>
+                                    </div>
+                                </div>
+                            <?php endif; ?>
                             
+                            <!-- button -->
                             <div class="mt-5">
                                 <button type="submit" class="btn btn-outline-light me-2"><?= $editMember ? 'Update' : 'Register' ?> Member</button>
                                 <a href="/members" class="btn btn-light">Cancel</a>
