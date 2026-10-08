@@ -27,7 +27,28 @@ if ($me) {
     $monthlyCheckin = $checkin->fetchColumn();
 
     // expiring soon
-    $expiringSoon = $me['days_left'] >= 0 && $me['days_left'] <= 7;
+    $expiringSoon = $me['days_left'] >= 1 && $me['days_left'] <= 7;
+
+    // expired
+    $expired = $me['days_left'] <= 0;
+
+    // upcoming class
+    $ucStmt = $db->prepare("
+        SELECT  c.class_name, c.instructor, c.schedule_time
+        FROM class_bookings cb JOIN classes c
+        ON cb.class_id = c.class_id
+        WHERE cb.member_id = ?
+        AND cb.status = 'booked' 
+        AND c.schedule_time >= NOW()
+        ORDER BY c.schedule_time ASC
+    ");
+    $ucStmt->execute([$me['member_id']]);
+    $upcomingClass = $ucStmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // recent checkins
+    $recentStmt = $db->prepare("SELECT checkin_time FROM checkins WHERE member_id = ?");
+    $recentStmt->execute([$me['member_id']]);
+    $recentCheckin = $recentStmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 ?>
@@ -69,7 +90,9 @@ if ($me) {
 
                 <!-- expiring soon -->
                 <?php if ($expiringSoon): ?>
-                    <p class="alert alert-secondary mx-2 my-4">Your membership expires in <?= $expiringSoon ?> days. Please contact us or walk-in to renew.</p>
+                    <p class="alert alert-warning mx-2 my-4">Your membership expires in <?= $expiringSoon ?> day<?= ($me['days_left'] == 1) ? '' : 's' ?>. Please contact us or walk-in to renew</p>
+                <?php elseif ($expired): ?>
+                    <p class="alert alert-danger">Your membership has expired. Please contact us or walk-in to renew</p>
                 <?php endif; ?>
 
                 <!-- stat cards -->
@@ -101,15 +124,37 @@ if ($me) {
                 </div>
 
                 <!-- classes and checkins -->
-                <div class="row gap-3 mx-2">
+                <div class="row mx-2">
                     <!-- classes -->
-                    <div class="col class">
-                        <p class="m-0">Upcoming classes</p>
+                    <div class="col class py-3 px-4">
+                        <p class="m-0 fw-bold fs-4">Upcoming classes</p>
+
+                        <?php if (empty($upcomingClass)): ?>
+                            <p class="text-center text-secondary py-3">No upcoming class yet</p>
+                        <?php else: ?>
+                            <?php foreach ($upcomingClass as $class): ?>
+                                <div class="d-flex justify-content-between mt-2 name-date py-2">
+                                    <p class="m-0 class-name"><?= htmlspecialchars($class['class_name']) ?></p>
+                                    <p class="m-0 text-secondary class-time"><?= htmlspecialchars(date('d/m/Y (D), g:i A', strtotime($class['schedule_time']))) ?></p>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </div>
 
                     <!-- checkins -->
-                    <div class="col checkin">
-                        <p class="m-0">Recent check-ins</p>
+                    <div class="col checkin py-3 px-4">
+                        <p class="m-0 fw-bold fs-4">Recent check-ins</p>
+
+                        <?php if (empty($recentCheckin)): ?>
+                            <p class="text-center text-secondary py-3">No check-in recorded yet</p>
+                        <?php else: ?>
+                            <?php foreach ($recentCheckin as $checkin): ?>
+                                <div class="d-flex justify-content-between date-time mt-2 py-2">
+                                    <p class="m-0"><?= htmlspecialchars(date('d-m-Y', strtotime($checkin['checkin_time']))) ?></p>
+                                    <p class="m-0 text-secondary"><?= htmlspecialchars(date('g:i A', strtotime($checkin['checkin_time']))) ?></p>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

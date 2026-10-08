@@ -27,14 +27,14 @@ body {
 .stat-cards {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-gap: 20px;
+    grid-gap: 25px;
 }
 
 .cards {
     border-radius: 10px;
     padding: 1rem 1.3rem;
     border: 1px solid #FFFFFF;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 3px 13px rgba(235, 232, 232, 0.571);
 }
 
 .stat-value {
@@ -57,4 +57,21 @@ body {
 .row .class, .row .checkin {
     border: 1px solid white;
     border-radius: 10px;
+    box-shadow: 0 3px 13px rgba(235, 232, 232, 0.571);
+}
+
+.name-date, .date-time {
+    border-bottom: 1px solid #f0f0f059;
+}
+
+.name-date:last-child, .date-time:last-child {
+    border: none;
+}
+
+.class-name {
+    font-size: 1.1rem;
+}
+
+.row {
+    gap: 25px !important;
 }

@@ -62,7 +62,7 @@ $classes = $db->query("
     ORDER BY c.schedule_time ASC
 ")->fetchAll(PDO::FETCH_ASSOC);
 
-// when create btn in clicked
+// when create btn is clicked
 $showAddForm = isset($_GET['action']) && $_GET['action'] === 'new';
 
 // edit class btn

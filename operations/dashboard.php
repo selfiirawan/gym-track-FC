@@ -136,7 +136,7 @@ $expiringSoon = $db->query("
                 <!-- recent members -->
                 <div class="recent-members mx-2 my-5">
                     <div class="table-title d-flex justify-content-between p-3">
-                        <p class="fw-bold fs-3 align-content-center">Recent Members</p>
+                        <p class="fw-bold fs-4 align-content-center">Recent Members</p>
                         <a href="/members?action=new" class="add-member align-content-center p-2 px-3">
                             <i class="bi bi-plus"></i> Add Member
                         </a>
