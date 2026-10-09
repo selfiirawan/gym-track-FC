@@ -196,19 +196,27 @@ Mostly on the backend and the SQL queries
 
 ---
 
-## Day 9 — Date: ____
+## Day 9 — Date: 07/10/2026
 
 ### What I planned to do today
-
+-Remove the separate class timetable page and combine it into the classes page
+- Start the classes page
 
 ### What I actually did
-
+- Completed everything on the staff page
+- Completed the classes page in one day. Only the front end of the "create new class" form is left
 
 ### Blockers / Challenges
-
+- Understanding the Bootstrap modal feature. The modal caused biggest bug on this page
+- Putting the logic and queries for members, classes, and class bookings together
+- This was one of the hardest pages
+- Still struggling with GET vs POST and with queries, even though have been doing almost the same thing for a week.
 
 ### What I learned
-
+- Using a subquery instead of a `JOIN`
+- Using `type="datetime-local"`
+- Creating a progress bar with Bootstrap
+- Creating a pop-up form with a Bootstrap modal, using a bit of JavaScript
 
 ---
 
