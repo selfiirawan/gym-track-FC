@@ -51,7 +51,7 @@ function getCurrentMember($db) {
     }
 
     $stmt = $db->prepare("
-        SELECT m.*, p.plan_name, DATEDIFF(expiry_date, CURDATE()) AS days_left 
+        SELECT m.*, p.plan_name, GREATEST(DATEDIFF(expiry_date, CURDATE()), 0) AS days_left 
         FROM members m
         JOIN membership_plans p ON m.plan_id = p.plan_id
         WHERE m.user_id = ?

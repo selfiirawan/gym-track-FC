@@ -80,83 +80,87 @@ if ($me) {
 
             <!-- content -->
             <div class="content px-4">
-                <!-- header -->
-                <div class="header d-flex justify-content-between p-3 pb-0 my-3">
-                    <div class="greeting">
-                        <h3>Hello, <?= htmlspecialchars($_SESSION['user']['name'] ?? '') ?></h3>
-                        <p>Here's your membership overview</p>
-                    </div>
-                </div>
-
-                <!-- expiring soon -->
-                <?php if ($expiringSoon): ?>
-                    <p class="alert alert-warning mx-2 my-4">Your membership expires in <?= $expiringSoon ?> day<?= ($me['days_left'] == 1) ? '' : 's' ?>. Please contact us or walk-in to renew</p>
-                <?php elseif ($expired): ?>
-                    <p class="alert alert-danger">Your membership has expired. Please contact us or walk-in to renew</p>
-                <?php endif; ?>
-
-                <!-- stat cards -->
-                <div class="stat-cards my-5 px-2">
-                    <div class="cards plan">
-                        <div class="d-flex plan justify-content-between align-items-center">
-                            <p class="stat-label plan text-secondary">Current plan</p>
-                            <p class="badge rounded-pill badge-<?= $isActive ? 'active' : 'expired' ?>">
-                                <?= $isActive ? 'Active' : 'Expired' ?>
-                            </p>
+                <?php if ($me): ?>
+                    <!-- header -->
+                    <div class="header d-flex justify-content-between p-3 pb-0 my-3">
+                        <div class="greeting">
+                            <h3>Hello, <?= htmlspecialchars($_SESSION['user']['name'] ?? '') ?></h3>
+                            <p>Here's your membership overview</p>
                         </div>
-                        <p class="stat-value"><?= htmlspecialchars($me['plan_name']) ?></p>
                     </div>
 
-                    <div class="cards expired">
-                        <p class="stat-label text-secondary">Expires on</p>
-                        <p class="stat-value"><?= htmlspecialchars(date('d-m-Y', strtotime($me['expiry_date']))) ?></p>
+                    <!-- expiring soon -->
+                    <?php if ($expiringSoon): ?>
+                        <p class="alert alert-warning mx-2 my-4">Your membership expires in <?= $expiringSoon ?> day<?= ($me['days_left'] == 1) ? '' : 's' ?>. Please contact us or walk-in to renew</p>
+                    <?php elseif ($expired): ?>
+                        <p class="alert alert-danger">Your membership has expired. Please contact us or walk-in to renew</p>
+                    <?php endif; ?>
+
+                    <!-- stat cards -->
+                    <div class="stat-cards my-5 px-2">
+                        <div class="cards plan">
+                            <div class="d-flex plan justify-content-between align-items-center">
+                                <p class="stat-label plan text-secondary">Current plan</p>
+                                <p class="badge rounded-pill badge-<?= $isActive ? 'active' : 'expired' ?>">
+                                    <?= $isActive ? 'Active' : 'Expired' ?>
+                                </p>
+                            </div>
+                            <p class="stat-value"><?= htmlspecialchars($me['plan_name']) ?></p>
+                        </div>
+
+                        <div class="cards expired">
+                            <p class="stat-label text-secondary">Expires on</p>
+                            <p class="stat-value"><?= htmlspecialchars(date('d-m-Y', strtotime($me['expiry_date']))) ?></p>
+                        </div>
+
+                        <div class="cards days-left">
+                            <p class="stat-label text-secondary">Days left</p>
+                            <p class="stat-value"><?= htmlspecialchars($me['days_left']) ?></p>
+                        </div>
+
+                        <div class="cards checkin-card">
+                            <p class="stat-label text-secondary">Check-ins this month</p>
+                            <p class="stat-value"><?= $monthlyCheckin ?></p>
+                        </div>
                     </div>
 
-                    <div class="cards days-left">
-                        <p class="stat-label text-secondary">Days left</p>
-                        <p class="stat-value"><?= htmlspecialchars($me['days_left']) ?></p>
+                    <!-- classes and checkins -->
+                    <div class="row mx-2">
+                        <!-- classes -->
+                        <div class="col class py-3 px-4">
+                            <p class="m-0 fw-bold fs-4">Upcoming classes</p>
+
+                            <?php if (empty($upcomingClass)): ?>
+                                <p class="text-center text-secondary py-3">No upcoming class yet</p>
+                            <?php else: ?>
+                                <?php foreach ($upcomingClass as $class): ?>
+                                    <div class="d-flex justify-content-between mt-2 name-date py-2">
+                                        <p class="m-0 class-name"><?= htmlspecialchars($class['class_name']) ?></p>
+                                        <p class="m-0 text-secondary class-time"><?= htmlspecialchars(date('d/m/Y (D), g:i A', strtotime($class['schedule_time']))) ?></p>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </div>
+
+                        <!-- checkins -->
+                        <div class="col checkin py-3 px-4">
+                            <p class="m-0 fw-bold fs-4">Recent check-ins</p>
+
+                            <?php if (empty($recentCheckin)): ?>
+                                <p class="text-center text-secondary py-3">No check-in recorded yet</p>
+                            <?php else: ?>
+                                <?php foreach ($recentCheckin as $checkin): ?>
+                                    <div class="d-flex justify-content-between date-time mt-2 py-2">
+                                        <p class="m-0"><?= htmlspecialchars(date('d-m-Y', strtotime($checkin['checkin_time']))) ?></p>
+                                        <p class="m-0 text-secondary"><?= htmlspecialchars(date('g:i A', strtotime($checkin['checkin_time']))) ?></p>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </div>
                     </div>
-
-                    <div class="cards checkin-card">
-                        <p class="stat-label text-secondary">Check-ins this month</p>
-                        <p class="stat-value"><?= $monthlyCheckin ?></p>
-                    </div>
-                </div>
-
-                <!-- classes and checkins -->
-                <div class="row mx-2">
-                    <!-- classes -->
-                    <div class="col class py-3 px-4">
-                        <p class="m-0 fw-bold fs-4">Upcoming classes</p>
-
-                        <?php if (empty($upcomingClass)): ?>
-                            <p class="text-center text-secondary py-3">No upcoming class yet</p>
-                        <?php else: ?>
-                            <?php foreach ($upcomingClass as $class): ?>
-                                <div class="d-flex justify-content-between mt-2 name-date py-2">
-                                    <p class="m-0 class-name"><?= htmlspecialchars($class['class_name']) ?></p>
-                                    <p class="m-0 text-secondary class-time"><?= htmlspecialchars(date('d/m/Y (D), g:i A', strtotime($class['schedule_time']))) ?></p>
-                                </div>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </div>
-
-                    <!-- checkins -->
-                    <div class="col checkin py-3 px-4">
-                        <p class="m-0 fw-bold fs-4">Recent check-ins</p>
-
-                        <?php if (empty($recentCheckin)): ?>
-                            <p class="text-center text-secondary py-3">No check-in recorded yet</p>
-                        <?php else: ?>
-                            <?php foreach ($recentCheckin as $checkin): ?>
-                                <div class="d-flex justify-content-between date-time mt-2 py-2">
-                                    <p class="m-0"><?= htmlspecialchars(date('d-m-Y', strtotime($checkin['checkin_time']))) ?></p>
-                                    <p class="m-0 text-secondary"><?= htmlspecialchars(date('g:i A', strtotime($checkin['checkin_time']))) ?></p>
-                                </div>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </div>
-                </div>
+                <?php else: ?>
+                    <p class="alert alert-secondary my-5">No membership found. Please contact us or walk-in to register</p>
+                <?php endif; ?>
             </div>
         </div>
 

@@ -16,7 +16,7 @@ $manageId = $_GET['manage'] ?? null;
 $results = [];
 
 if ($search != '') {
-    $stmt = $db->prepare("SELECT * FROM members WHERE name LIKE ?");
+    $stmt = $db->prepare("SELECT * FROM members WHERE name LIKE ? AND expiry_date >= CURDATE()");
     $stmt->execute(['%' . $search . '%']);
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
@@ -218,14 +218,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['class_name'])) {
                             $slotsLeft = $class['capacity'] - $class['slots_filled'];
                             $fillPercent = $class['capacity'] > 0 ? round(($class['slots_filled'] / $class['capacity']) * 100) : 0;
 
-                            $barColor = '';
+                            $barColor = 'bg-success';
                             if ($fillPercent >= 90) {
                                 $barColor = 'bg-danger';
-                            } else if ($barColor >= 70) {
+                            } else if ($fillPercent >= 70) {
                                 $barColor = 'bg-warning';
-                            } else {
-                                $barColor = 'bg-success';
-                            }
+                            } 
 
                             $isFull = $slotsLeft <= 0;
                         ?>
