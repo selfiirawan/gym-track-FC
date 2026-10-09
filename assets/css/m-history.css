@@ -1,0 +1,45 @@
+body {
+    font-family: "Inter", sans-serif;
+    background-color: #000;
+    color: #FFFFFF;
+}
+
+.content-navbar {
+    background-color: #000 !important;
+}
+
+/* header */
+.greeting h3, .greeting p {
+    margin: 0;
+}
+
+.greeting h3 {
+    font-weight: bold;
+    font-size: 2rem;
+    font-family: "Lora", serif;
+}
+
+.greeting p {
+    font-size: 1rem;
+}
+
+/* status badge */
+.badge-paid, .badge-booked {
+    background: rgba(46, 125, 50, 0.2);
+    color: #4caf50;
+}
+
+.badge-pending {
+    background: rgba(255, 152, 0, 0.2);
+    color: #ff9800;
+}
+
+.badge-failed, .badge-cancelled {
+    background: rgba(198, 40, 40, 0.2);
+    color: #ef5350;
+}
+
+/* buttons */
+.btn {
+    border-radius: 20px !important;
+}

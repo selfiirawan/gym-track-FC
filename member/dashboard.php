@@ -85,7 +85,7 @@ if ($me) {
                     <div class="header d-flex justify-content-between p-3 pb-0 my-3">
                         <div class="greeting">
                             <h3>Hello, <?= htmlspecialchars($_SESSION['user']['name'] ?? '') ?></h3>
-                            <p>Here's your membership overview</p>
+                            <p class="mt-1">Here's your membership overview</p>
                         </div>
                     </div>
 

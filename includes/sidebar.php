@@ -86,7 +86,7 @@ $role = $roleLabel[$_SESSION['user']['role']] ?? 'Guest';
             </li>
 
             <li>
-                <a href="/member/history">
+                <a href="/history">
                     <i class="bi bi-clock-history"></i>
                     <span>My History</span>
                 </a>

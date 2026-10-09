@@ -26,6 +26,13 @@
     border: 1px solid #FFFFFF;
 }
 
+/* class form */
+.class-form {
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    padding: 25px 20px;
+}
+
 /* class card */
 .parents {
     display: grid;

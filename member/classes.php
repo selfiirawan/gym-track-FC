@@ -100,7 +100,7 @@ if ($me) {
                     <div class="header d-flex justify-content-between p-3 pb-0 my-3">
                         <div class="greeting">
                             <h3>Class Timetable</h3>
-                            <p>Book your classes</p>
+                            <p class="mt-1">Book your classes</p>
                         </div>
                     </div>
 

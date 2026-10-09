@@ -73,6 +73,15 @@ switch ($path) {
         }
         break;
 
+    case 'history':
+        if (isMember()) {
+            include 'member/history.php';
+        } else {
+            header('Location: /dashboard');
+            exit;
+        }
+        break;
+
     default:
         include '404.php';
         break;

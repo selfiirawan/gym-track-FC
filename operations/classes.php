@@ -162,7 +162,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['class_name'])) {
 
                 <!-- edit or create new class -->
                 <?php if ($showForm): ?>
-                    <div class="class-form">
+                    <div class="class-form mx-3 mt-4">
                         <p class="fw-bold fs-4"><?= $editClass ? 'Edit' : 'Create New' ?> Class</p>
 
                         <?php if ($error): ?>
@@ -199,7 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['class_name'])) {
                             </div>
 
                             <!-- buttons -->
-                            <div class="d-flex mt-3">
+                            <div class="d-flex mt-4">
                                 <button type="submit" class="btn btn-dark me-3"><?= $editClass ? 'Save Changes' : 'Create Class' ?></button>
                                 <a href="/classes" class="btn btn-outline-dark">Cancel</a>
                             </div>

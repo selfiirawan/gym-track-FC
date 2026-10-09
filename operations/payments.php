@@ -190,10 +190,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset(($_POST['member_id']))) {
                             <button type="submit" class="btn btn-dark searchBtn">Search</button>
                         </form>
 
-                        <!-- after search -->
+                        <!-- search result -->
                         <?php foreach ($memberResult as $member): ?>
                             <div class="d-flex justify-content-between p-2 search-result">
-                                <p class="m-0"><?= htmlspecialchars($member['name']) ?> - <span class="text-secondary"><?= htmlspecialchars($member['contact']) ?></span></p>
+                                <p class="m-0"><?= htmlspecialchars($member['name']) ?> | <span class="text-secondary"><?= htmlspecialchars($member['contact']) ?>, <?= htmlspecialchars($member['email'] ?? 'no email') ?></span></p>
                                 <a href="/payments?action=new&member_id=<?= $member['member_id'] ?>" class="btn btn-sm btn-outline-dark selectBtn">Select</a>
                             </div>
                         <?php endforeach; ?>
