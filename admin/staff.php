@@ -226,11 +226,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
 
-                <div class="mx-3">
-                    <p class="m-0"><span class="fw-bold">Total Staff:</span> <?= htmlspecialchars($totalStaff) ?></p>
-                    <p class="m-0"><span class="fw-bold">On leave:</span> <?= $onleave ?></p>
-                </div>
-
                 <!-- add / edit staff form -->
                 <?php if ($showForm): ?>
                     <div class="staff-form m-3 mt-4 ">
@@ -336,6 +331,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 <?php endif; ?>
 
+                <!-- total staff and on leave -->
+                <div class="mx-3">
+                    <p class="m-0"><span class="fw-bold">Total Staff:</span> <?= htmlspecialchars($totalStaff) ?></p>
+                    <p class="m-0"><span class="fw-bold">On leave:</span> <?= $onleave ?></p>
+                </div>
+
                 <!-- staff cards -->
                 <div class="parents mx-2 my-4">
                     <?php if (empty($staffs)): ?>
@@ -371,8 +372,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <!-- contact -->
                                 <p class="contact m-0 ms-2 my-1 mt-auto">Contact:</p>
                                 <div class="contact-info d-flex justify-content-around p-2 py-2 rounded-4">
-                                    <p class="m-0 email"><?= htmlspecialchars($staff['email']) ?></p>
-                                    <p class="m-0 number"><?= htmlspecialchars($staff['contact']) ?></p>
+                                    <p class="m-0 email small"><?= htmlspecialchars($staff['email']) ?></p>
+                                    <p class="m-0 number small"><?= htmlspecialchars($staff['contact']) ?></p>
                                 </div>
 
                                 <!-- edit delete btn -->

@@ -31,6 +31,74 @@ $adStmt = $db->prepare("SELECT name, email, role FROM users WHERE user_id = ?");
 $adStmt->execute([$userId]);
 $user = $adStmt->fetch(PDO::FETCH_ASSOC);
 
+// submit updated info
+if (isset($_POST['save_profile'])) {
+    $name = $_POST['name'];
+    $contact = $_POST['contact'];
+    $email = $_POST['email'];
+
+    try {
+        $db->beginTransaction();
+
+        // update user = admin
+        $updatedAdmin = $db->prepare("UPDATE users SET name=?, email=? WHERE user_id = ?");
+        $updatedAdmin->execute([$name, $email, $userId]);
+
+        if ($me) {
+            // update user = member 
+            $updatedMember = $db->prepare("UPDATE members SET name=?, email=?, contact=? WHERE user_id = ?");
+            $updatedMember->execute([$name, $email, $contact, $userId]);
+        } else if ($staffProfile) {
+            // update user = staff
+            $updatedStaff = $db->prepare("UPDATE staff_profiles SET contact=? WHERE user_id = ?");
+            $updatedStaff->execute([$contact, $userId]);
+        }
+
+        $db->commit();
+
+        $_SESSION['user']['name'] = $name;
+        $_SESSION['user']['email'] = $email;
+
+        header('Location: /profile?saved=1');
+        exit;
+
+    } catch (PDOException $e) {
+        if ($db->inTransaction()) {
+            $db->rollBack();
+        }
+
+        if ($e->getcode() == 23000) {
+            $error = 'This email is already in use';
+        } else {
+            throw $e;
+        }
+    }
+}
+
+// change password
+if (isset($_POST['change_pass'])) {
+    $pass = $db->prepare("SELECT password_hash FROM users WHERE user_id = ?");
+    $pass->execute([$userId]);
+    $hassPw = $pass->fetchColumn();
+
+    $newPass = $_POST['new_pass'];
+    $confirmPass = $_POST['confirm_pass'];
+
+    if (!password_verify($_POST['curr_pass'], $hassPw)) {
+        $error = 'Current password is incorrect!';
+    } else if ($newPass !== $confirmPass) {
+        $error = 'New passwords do not match!';
+    } else {
+        $hashNew = password_hash($newPass, PASSWORD_DEFAULT);
+
+        $confirmedNew = $db->prepare("UPDATE users SET password_hash=? WHERE user_id = ?");
+        $confirmedNew->execute([$hashNew, $userId]);
+
+        header('Location: /profile?saved=1');
+        exit;
+    }
+}
+
 
 ?>
 
@@ -67,10 +135,18 @@ $user = $adStmt->fetch(PDO::FETCH_ASSOC);
                     </div>
                 </div>
 
-                <!-- info to edit -->
-                <div class="parents">
+                <?php if (isset($_GET['saved'])): ?>
+                    <p class="alert alert-success mx-3">Profile updated!</p>
+                <?php endif; ?>
+
+                <!-- info to edit and acc details -->
+                <div class="parents mx-3 my-4">
                     <div class="profile-form">
-                        <form action="/profiles" method="POST">
+                        <p class="fw-bold fs-4">Personal Information</p>
+
+                        <form action="/profile" method="POST">
+                            <input type="hidden" name="save_profile" value="1">
+
                             <div class="mb-3">
                                 <label class="form-label">Name</label>
                                 <input type="text" class="form-control" name="name" value="<?= htmlspecialchars($user['name']) ?>" required>
@@ -84,18 +160,18 @@ $user = $adStmt->fetch(PDO::FETCH_ASSOC);
                                 </div>
                                 <div class="col">
                                     <label class="form-label" for="email">Email</label>
-                                    <input type="email" id="email" class="form-control" name="email" value="<?= htmlspecialchars($user['email']) ?>" placeholder="member@gmail.com">
+                                    <input type="email" id="email" class="form-control" name="email" value="<?= htmlspecialchars($user['email']) ?>" placeholder="member@gmail.com" required>
                                 </div>
                             </div>
 
                             <!-- button -->
-                            <button type="submit" class="btn btn-outline-dark">Save changes</button>
+                            <button type="submit" class="btn btn-outline-light mt-4">Save changes</button>
                         </form>
                     </div>
 
                     <!-- account details -->
                     <div class="details">
-                        <p>Account details</p>
+                        <p class="fw-bold fs-4">Account details</p>
                         
                         <!-- role -->
                         <div class="d-flex justify-content-between">
@@ -112,9 +188,40 @@ $user = $adStmt->fetch(PDO::FETCH_ASSOC);
                         <!-- status -->
                         <div class="d-flex justify-content-between">
                             <p class="text-secondary">Status</p>
-                            <p><?= htmlspecialchars($staffProfile['status'] ?? 'Available') ?></p>
+                            <p><?= htmlspecialchars(ucfirst($staffProfile['status']) ?? 'Available') ?></p>
                         </div>
                     </div>
+                </div>
+
+                <!-- change pass -->
+                <div class="password mx-3 my-4">
+                    <p class="fw-bold fs-4">Change Password</p>
+
+                    <form action="/profile" method="POST">
+                        <input type="hidden" name="change_pass" value="1">
+
+                        <?php if ($error): ?>
+                            <p class="alert alert-danger"><?= htmlspecialchars($error) ?></p>
+                        <?php endif; ?>
+
+                        <!-- current pass -->
+                        <div class="mb-4">
+                            <input type="password" name="curr_pass" class="form-control" placeholder="Current password" required>
+                        </div>
+
+                        <!-- new pass -->
+                        <div class="row mb-3">
+                            <div class="col-6">
+                                <input type="password" name="new_pass" class="form-control" placeholder="New password" required>
+                            </div>
+
+                            <div class="col-6">
+                                <input type="password" name="confirm_pass" class="form-control" placeholder="Confirm new password" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-outline-light mt-4">Update password</button>
+                    </form>
                 </div>
             </div>
         </div>
