@@ -82,6 +82,10 @@ switch ($path) {
         }
         break;
 
+    case 'profile':
+        include 'profile.php';
+        break;
+
     default:
         include '404.php';
         break;

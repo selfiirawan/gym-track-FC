@@ -60,3 +60,16 @@ body {
     background: rgba(198, 40, 40, 0.2);
     color: #ef5350;
 }
+
+/* progress bar */
+.bg-success {
+    background-image: linear-gradient(to right, #1ad55b, #1bc265, #27af6b, #359c6d, #42896b);
+}
+
+.bg-warning {
+    background-image: linear-gradient(to right, #edec2c, #f4da16, #f9c800, #fdb600, #ffa300) !important;
+}
+
+.bg-danger {
+    background-image: linear-gradient(to right, #f81818, #d61020, #b40e23, #920f22, #70111f) !important;
+}

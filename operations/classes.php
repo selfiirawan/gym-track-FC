@@ -252,7 +252,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['class_name'])) {
                                 </div>
 
                                 <!-- progress bar -->
-                                <div class="progress mb-3" style="height: 5px;">
+                                <div class="progress mb-3" style="height: 6px;">
                                     <div class="progress-bar <?= $barColor ?>" style="width: <?= $fillPercent ?>%;"></div>
                                 </div>
 

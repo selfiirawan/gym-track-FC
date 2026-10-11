@@ -30,6 +30,12 @@ if ($searchStaff !== '') {
     $searchResult = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+// total staff
+$totalStaff = $db->query("SELECT COUNT(*) AS total FROM staff_profiles")->fetchColumn();
+
+// on leave staff
+$onleave = $db->query("SELECT COUNT(*) AS on_leave FROM staff_profiles WHERE status = 'on_leave'")->fetchColumn();
+
 
 // fetch staff 
 if ($searchStaff !== '') {
@@ -220,7 +226,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
 
-                <!-- add staff form -->
+                <div class="mx-3">
+                    <p class="m-0"><span class="fw-bold">Total Staff:</span> <?= htmlspecialchars($totalStaff) ?></p>
+                    <p class="m-0"><span class="fw-bold">On leave:</span> <?= $onleave ?></p>
+                </div>
+
+                <!-- add / edit staff form -->
                 <?php if ($showForm): ?>
                     <div class="staff-form m-3 mt-4 ">
                         <p class="fw-bold fs-4"><?= $editStaff ? 'Edit' : 'Add New' ?> Staff</p>
@@ -326,39 +337,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php endif; ?>
 
                 <!-- staff cards -->
-                <div class="parents mx-2 my-5">
+                <div class="parents mx-2 my-4">
                     <?php if (empty($staffs)): ?>
                         <p>No staffs yet</p>
                     <?php else: ?>
                         <?php foreach ($staffs as $staff): ?>
                             <div class="staff-card py-3 px-4">
-                                <div class="d-flex justify-content-between header mb-2">
+                                <div class="d-flex justify-content-between header mb-2 mt-1">
                                     <div class="d-flex gap-2 align-items-center">
                                         <!-- avatar -->
-                                        <div class="avatar d-flex justify-content-center align-items-center me-1 m-0">
+                                        <div class="avatar fw-bold d-flex justify-content-center align-items-center me-1 m-0">
                                             <?= htmlspecialchars(strtoupper(substr($staff['name'], 0, 1))) ?>
                                         </div>
 
                                         <!-- name and role -->
                                         <div>
                                             <p class="fw-bold m-0 name"><?= htmlspecialchars($staff['name']) ?></p>
-                                            <p class="m-0 roles text-secondary m-0"><?= htmlspecialchars(ucfirst($staff['role'])) ?> - <?= htmlspecialchars($staff['job_role']) ?></p>
+                                            <p class="m-0 role text-secondary m-0 small"><?= htmlspecialchars(ucfirst($staff['role'])) ?> - <?= htmlspecialchars($staff['job_role']) ?></p>
                                         </div>
                                     </div>
 
                                     <div class="text-end">
                                         <!-- status -->
-                                        <p class="m-0 p-3 badge rounded-pill <?= $staff['status'] ?>"><?= htmlspecialchars(($staff['status'] === 'on_leave' ) ? 'On Leave' : 'Available') ?></p>
+                                        <p class="m-0 p-2 badge rounded-pill <?= $staff['status'] ?>"><?= htmlspecialchars(($staff['status'] === 'on_leave' ) ? 'On Leave' : 'Available') ?></p>
 
                                         <!-- leave dates -->
                                         <?php if ($staff['status'] === 'on_leave'): ?>
-                                            <p class="m-0 text-secondary p-2 leave-date"><?= htmlspecialchars(date('d/m/Y', strtotime($staff['leave_start']))) ?> - <?= htmlspecialchars(date('d/m/Y', strtotime($staff['leave_end']))) ?></p>
+                                            <p class="m-0 text-secondary p-0 leave-date small mt-1"><?= htmlspecialchars(date('d/m/Y', strtotime($staff['leave_start']))) ?> <br> - <?= htmlspecialchars(date('d/m/Y', strtotime($staff['leave_end']))) ?></p>
                                         <?php endif; ?>
                                     </div>
                                 </div>
 
                                 <!-- contact -->
-                                <p class="contact m-0 ms-2 my-1 mt-3">Contact:</p>
+                                <p class="contact m-0 ms-2 my-1 mt-auto">Contact:</p>
                                 <div class="contact-info d-flex justify-content-around p-2 py-2 rounded-4">
                                     <p class="m-0 email"><?= htmlspecialchars($staff['email']) ?></p>
                                     <p class="m-0 number"><?= htmlspecialchars($staff['contact']) ?></p>

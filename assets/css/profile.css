@@ -1,0 +1,23 @@
+/* header */
+.greeting h3, .greeting p {
+    margin: 0;
+}
+
+.greeting h3 {
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+.greeting p {
+    font-size: 1rem;
+}
+
+/* content */
+.parents {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+}
+
+.parents, .profile-form, .details {
+    border: 1px solid black;
+}

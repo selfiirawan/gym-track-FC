@@ -8,6 +8,8 @@ $roleLabel = [
 
 $role = $roleLabel[$_SESSION['user']['role']] ?? 'Guest';
 
+$currentPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+
 ?>
 
 <div class="sidebar p-3 d-flex flex-column position-sticky top-0 left-0 bottom-0">
@@ -19,28 +21,28 @@ $role = $roleLabel[$_SESSION['user']['role']] ?? 'Guest';
     <ul class="px-3 h-100">
         <!-- staff & admin -->
         <?php if (isStaff()): ?>
-            <li>
+            <li  class="<?= $currentPath === '/dashboard' ? 'active' : '' ?>">
                 <a href="/dashboard">
                     <i class="bi bi-columns-gap"></i>
                     <span>Dashboard</span>
                 </a>
             </li>
 
-            <li>
+            <li class="<?= $currentPath === '/members' ? 'active' : '' ?>">
                 <a href="/members">
                     <i class="bi bi-people"></i>
                     <span>Members</span>
                 </a>
             </li>
 
-            <li>
+            <li class="<?= $currentPath === '/checkin' ? 'active' : '' ?>">
                 <a href="/checkin">
                     <i class="bi bi-clipboard2-check"></i>
                     <span>Check-In</span>
                 </a>
             </li>
 
-            <li>
+            <li class="<?= $currentPath === '/payments' ? 'active' : '' ?>">
                 <a href="/payments">
                     <i class="bi bi-cash-stack"></i>
                     <span>Payment</span>
@@ -54,14 +56,14 @@ $role = $roleLabel[$_SESSION['user']['role']] ?? 'Guest';
                 </a>
             </li> -->
 
-            <li>
+            <li class="<?= $currentPath === '/plans' ? 'active' : '' ?>">
                 <a href="/plans">
                     <i class="bi bi-credit-card"></i>
                     <span>Membership Plans</span>
                 </a>
             </li>
 
-            <li>
+            <li class="<?= $currentPath === '/classes' ? 'active' : '' ?>">
                 <a href="/classes">
                     <i class="bi bi-calendar-plus"></i>
                     <span>Classes</span>
@@ -71,21 +73,21 @@ $role = $roleLabel[$_SESSION['user']['role']] ?? 'Guest';
         
         <!-- member only -->
         <?php if (isMember()): ?>
-            <li>
+            <li class="<?= $currentPath === '/dashboard' ? 'active' : '' ?>">
                 <a href="/dashboard">
                     <i class="bi bi-columns-gap"></i>
                     <span>My Dashboard</span>
                 </a>
             </li>
 
-            <li>
+            <li class="<?= $currentPath === '/classes' ? 'active' : '' ?>">
                 <a href="/classes">
                     <i class="bi bi-calendar"></i>
                     <span>Class Timetable</span>
                 </a>
             </li>
 
-            <li>
+            <li class="<?= $currentPath === '/history' ? 'active' : '' ?>">
                 <a href="/history">
                     <i class="bi bi-clock-history"></i>
                     <span>My History</span>
@@ -96,14 +98,14 @@ $role = $roleLabel[$_SESSION['user']['role']] ?? 'Guest';
         <!-- visible in admin only -->
         <?php if (isAdmin()): ?>
 
-            <li>
+            <li class="<?= $currentPath === '/staff' ? 'active' : '' ?>">
                 <a href="/staff">
                     <i class="bi bi-person-badge"></i>
                     <span>Staff</span>
                 </a>
             </li>
             
-            <li>
+            <li class="<?= $currentPath === '/reports' ? 'active' : '' ?>">
                 <a href="/reports">
                     <i class="bi bi-bar-chart-line"></i>
                     <span>Reports</span>

@@ -76,7 +76,7 @@ if ($me) {
                     </div>
 
                     <!-- button tabs -->
-                    <div class="history-tabs mx-2 mb-5 mt-4">
+                    <div class="history-tabs mx-2 my-4">
                         <button class="btn btn-outline-light tab-btn active me-2" onclick="showHistory('checkin', this)">
                             Check-ins
                         </button>
@@ -92,7 +92,7 @@ if ($me) {
 
                     <!-- === TABLES === -->
                     <!-- check ins -->
-                    <div id="checkin" class="history-content">
+                    <div id="checkin" class="history-content p-4">
                         <table class="table-content w-100">
                             <thead>
                                 <tr class="">
@@ -103,7 +103,7 @@ if ($me) {
                             <tbody>
                                 <?php if (empty($checkinHistory)): ?>
                                     <tr>
-                                        <td colspan="2" class="text-center py-4">No check-in recorded yet</td>
+                                        <td colspan="4" class="text-center py-5 text-secondary">No check-in recorded yet</td>
                                     </tr>
                                 <?php else: ?>
                                     <?php foreach ($checkinHistory as $checkin): ?>
@@ -121,7 +121,7 @@ if ($me) {
                     </div>
 
                     <!-- payments -->
-                    <div id="payment" class="history-content" hidden>
+                    <div id="payment" class="history-content p-4" hidden>
                         <table class="table-content w-100">
                             <thead>
                                 <tr>
@@ -135,7 +135,7 @@ if ($me) {
                             <tbody>
                                 <?php if (empty($paymentHistory)): ?>
                                     <tr>
-                                        <td colspan="4" class="text-center text-secondary py-4">No payment recorded yet</td>
+                                        <td colspan="5" class="text-center text-secondary py-5">No payment recorded yet</td>
                                     </tr>
                                 <?php else: ?>
                                     <?php foreach ($paymentHistory as $payment): ?>
@@ -166,7 +166,7 @@ if ($me) {
                     </div>
 
                     <!-- classes -->
-                    <div id="class" class="history-content" hidden>
+                    <div id="class" class="history-content p-4" hidden>
                         <table class="table-content w-100">
                             <thead>
                                 <tr>
@@ -180,7 +180,7 @@ if ($me) {
                             <tbody>
                                 <?php if (empty($classHistory)): ?>
                                     <tr>
-                                        <td colspan="4" class="text-center text-secondary py-4">No record of booked / cancelled class yet</td>
+                                        <td colspan="4" class="text-center text-secondary py-5">No record of booked / cancelled class yet</td>
                                     </tr>
                                 <?php else: ?>
                                     <?php foreach ($classHistory as $class): ?>
@@ -192,10 +192,10 @@ if ($me) {
                                             <td><?= htmlspecialchars($class['instructor']) ?></td>
 
                                             <!-- date -->
-                                            <td><?= htmlspecialchars(date('d-m-Y', strtotime($class['schedule_time']))) ?></td>
+                                            <td class="date text-secondary small"><?= htmlspecialchars(date('d-m-Y', strtotime($class['schedule_time']))) ?></td>
 
                                             <!-- time -->
-                                            <td><?= htmlspecialchars(date('g:i A', strtotime($class['schedule_time']))) ?></td>
+                                            <td class="time text-secondary small"><?= htmlspecialchars(date('g:i A', strtotime($class['schedule_time']))) ?></td>
 
                                             <!-- status -->
                                             <td>
@@ -230,11 +230,11 @@ if ($me) {
 
             // 2.1 remove active style from all 
             document.querySelectorAll('.tab-btn').forEach(function(tab) {
-                tab.classList.remove('active');
+                tab.classList.remove('active', 'fw-bold');
             })
 
             // 2.2 add active style to selected tab 
-            clickedBtn.classList.add('active');
+            clickedBtn.classList.add('active', 'fw-bold');
         }
     </script>
 </body>

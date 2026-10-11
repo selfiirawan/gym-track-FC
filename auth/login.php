@@ -81,14 +81,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
 
                     <!-- remember me and forget password -->
-                    <div class="d-flex justify-content-between">
+                    <!-- <div class="d-flex justify-content-between">
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input checkbox">
                             <label class="form-check-label">Remember me</label>
                         </div>
 
                         <a href="/" class="text-secondary">Forgot password?</a>
-                    </div>
+                    </div> -->
 
                     <!-- login button -->
                     <button type="submit" class="btn bg-white w-100 fw-bold mt-4 login-btn">Log In</button>
@@ -106,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </button>
                 </form>
 
-                <p class="text-secondary m-0 mt-5 caption">Don't have an account? <a href="/register" class="text-light">Sign up here</a></p>
+                <p class="text-secondary m-0 mt-5 mb-2">Don't have an account? <a href="/register" class="text-light">Sign up here</a></p>
                 <p class="text-secondary caption m-0 mb-3">GymTrack v1.0. Secure club access for GymZ Fitness.</p>
             </div>
         </div>

@@ -56,7 +56,7 @@ if ($currentPath === 'checkin') {
             </button>
             
             <ul class="dropdown-menu">
-                <li><a href="#" class="dropdown-item">Profile</a></li>
+                <li><a href="/profile" class="dropdown-item">Profile</a></li>
                 <li><a href="/logout" class="dropdown-item">Log Out</a></li>
             </ul>
         </div>

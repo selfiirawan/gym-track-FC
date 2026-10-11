@@ -36,7 +36,7 @@
 /* staff cards */
 .parents {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 20px;
 }
 
@@ -44,10 +44,12 @@
     /* box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.15); */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     border-radius: 10px;
-    /* border: 2px solid #27262a; */
     background-color: #000;
     color: #FFFFFF;
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    height: 250px;
 }
 
 .staff-card:hover {
@@ -61,7 +63,7 @@
 }
 
 .leave-date {
-    font-size: 0.9rem;
+    /* font-size: 0.9rem; */
 }
 
 /* contact info */
@@ -77,6 +79,7 @@
 .email, .number {
     color: #ffffffc7;
 }
+
 
 /* status badge */
 .available {

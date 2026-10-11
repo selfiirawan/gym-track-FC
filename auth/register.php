@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </form>
 
-                <p class="caption text-secondary mt-3">Already have an account? <a href="/login" class="text-white">Log in here</a></p>
+                <p class="text-secondary mt-3">Already have an account? <a href="/login" class="text-white">Log in here</a></p>
             </div>
         </div>
 

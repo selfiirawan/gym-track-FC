@@ -43,3 +43,23 @@ body {
 .btn {
     border-radius: 20px !important;
 }
+
+.history-content, .table-content {
+    /* border: 1px solid white; */
+}
+
+.table-content thead tr {
+    border-bottom: 1px solid #f0f0f080;
+}
+
+.table-content th, .table-content td {
+    padding: 15px 20px;
+}
+
+.table-content tbody tr {
+    border-bottom: 1px solid #f0f0f02c;
+}
+
+tbody tr:last-child {
+    border: none;
+}

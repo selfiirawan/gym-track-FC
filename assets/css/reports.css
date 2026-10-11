@@ -24,7 +24,7 @@
     background-color: #000;
     color: #FFFFFF;
     padding: 1rem 1.3rem;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    /* border: 1px solid rgba(255, 255, 255, 0.08); */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
@@ -46,4 +46,30 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-gap: 20px;
+}
+
+.big-cards {
+    background-color: #000;
+    color: #FFFFFF;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+}
+
+.card-bg {
+    /* background-image: linear-gradient(to right, #3d6a98, #365e85, #2f5272, #294660, #233a4f); */
+    background-image: linear-gradient(to right, #dcec55, #b3ec67, #89e97d, #5be494, #0bdeaa);
+}
+
+.big-cards .title {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.big-cards p {
+    margin: 0;
+}
+
+.big-cards .total {
+    font-size: 0.9rem;
+    color: #f0f0f0bb;
 }

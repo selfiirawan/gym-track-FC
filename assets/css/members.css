@@ -40,6 +40,11 @@
     color: #FFFFFF !important;
 }
 
+.active {
+    background-color: #27262a !important;
+    color: #f0f0f0 !important;
+}
+
 /* add member form */
 .add-member-form form {
     background-color: #000;

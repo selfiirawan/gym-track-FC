@@ -287,9 +287,15 @@ $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 <!-- filter -->
                 <div class="filter-btn p-3 pb-0 mb-4">
-                    <a href="/members?filter=all&q=<?= urlencode($search) ?>">All</a>
-                    <a href="/members?filter=active&q=<?= urlencode($search) ?>">Active</a>
-                    <a href="/members?filter=expired&q=<?= urlencode($search) ?>">Expired</a>
+                    <a href="/members?filter=all&q=<?= urlencode($search) ?>" class="<?= $filter === 'all' ? 'active' : '' ?>">
+                        All
+                    </a>
+                    <a href="/members?filter=active&q=<?= urlencode($search) ?>" class="<?= $filter === 'active' ? 'active' : '' ?>">
+                        Active
+                    </a>
+                    <a href="/members?filter=expired&q=<?= urlencode($search) ?>" class="<?= $filter === 'expired' ? 'active' : '' ?>">
+                        Expired
+                    </a>
                 </div>
 
                 <!-- members table -->
