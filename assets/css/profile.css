@@ -19,10 +19,6 @@
     grid-gap: 30px;
 }
 
-.parents, .profile-form, .details {
-    /* border: 1px solid black; */
-}
-
 .profile-form, .details, .password {
     border: 1px solid #000;
     border-radius: 10px;
@@ -30,4 +26,9 @@
     background-color: #000;
     color: #ffff;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* change password */
+.password {
+    width: 57%;
 }
