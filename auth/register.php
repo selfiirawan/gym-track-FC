@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="app-container m-0 p-0 d-flex">
         <div class="main-content w-50 h-100 p-4">
-            <div>
+            <div class="<?= !$error ? 'mb-md-5' : '' ?>">
                 <h3 class="fw-bold fs-4 mb-0">GymTrack</h3>
                 <p class="text-secondary caption">New Member Registration & Portal Onboarding</p>
             </div>
@@ -80,24 +80,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <button type="submit" class="btn bg-white w-100 fw-bold mt-4 login-btn">Create Account</button>
                     
                     <!-- divider  -->
-                    <div class="divider m-2 d-flex align-items-center">
+                    <!-- <div class="divider m-2 d-flex align-items-center">
                         <span class="line"></span>
                         <span class="mx-2 text-secondary">or</span>
                         <span class="line"></span>
-                    </div>
+                    </div> -->
 
                     <!-- sign up with google -->
-                    <button type="submit" class="btn bg-transparent text-white border-white fw-bold w-100">
+                    <!-- <button type="submit" class="btn bg-transparent text-white border-white fw-bold w-100">
                         <img src="./assets/img/google.png" alt="google" width="16px" class="me-2">Sign Up with Google
                     </button>
 
                     <div class="form-check mt-3 caption">
                         <input type="checkbox" class="form-check-input checkbox">
                         <label class="form-check-label text-secondary">I agree to the <a href="/" class="text-light">Terms of Service</a> and <a href="/" class="text-light">Privacy Policy</a></label>
-                    </div>
+                    </div> -->
                 </form>
 
-                <p class="text-secondary mt-3">Already have an account? <a href="/login" class="text-white">Log in here</a></p>
+                <p class="text-secondary mt-5">Already have an account? <a href="/login" class="text-white">Log in here</a></p>
             </div>
         </div>
 

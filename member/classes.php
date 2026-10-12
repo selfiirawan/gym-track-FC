@@ -39,7 +39,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $me) {
         $check->execute([$me['member_id'], $classId]);
         $c = $check->fetch(PDO::FETCH_ASSOC);
 
-        if (!$c || strtotime($c['schedule_time']) < time()) {
+        if (!$isActive) {
+            $error = 'Your membership has expired. Please renew to book a class';
+        } else if ($c['filled'] >= $c['capacity']) {
+            $error = 'Sorry, this class is full';
+        } else if (!$c || strtotime($c['schedule_time']) < time()) {
             $error = 'This class is no longer available';
         } else {
             $insert = $db->prepare("INSERT INTO class_bookings (member_id, class_id, status) VALUES (?, ?, 'booked')");
@@ -48,6 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $me) {
             header('Location: /classes');
             exit;
         }
+
+        
     }
 }
 
@@ -106,6 +112,10 @@ if ($me) {
 
                     <?php if (!$isActive): ?>
                         <p class="alert alert-danger mx-3">Your membership has expired. Please renew to book a class</p>
+                    <?php endif; ?>
+
+                    <?php if ($error): ?>
+                        <p class="mx-3 alert alert-danger"><?= htmlspecialchars($error) ?></p>
                     <?php endif; ?>
 
                     <!-- class cards -->
@@ -169,7 +179,7 @@ if ($me) {
                                     <?php else: ?>
                                         <form action="/classes" method="POST">
                                             <input type="hidden" name="class_id" value="<?= $class['class_id'] ?>">
-                                            <button type="submit" name="book" class="btn btn-outline-success w-100 <?= !$isActive ? 'disabled' : '' ?>">Book class</button>
+                                            <button type="submit" name="book" class="btn btn-outline-success w-100" <?= !$isActive ? 'disabled' : '' ?>>Book class</button>
                                         </form>
                                     <?php endif; ?>
                                 </div>

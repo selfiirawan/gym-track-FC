@@ -59,7 +59,9 @@ $classes = $db->query("
     SELECT c.*, 
     (SELECT COUNT(*) FROM class_bookings cb WHERE c.class_id = cb.class_id AND cb.status = 'booked')
     AS slots_filled FROM classes c
-    ORDER BY c.schedule_time ASC
+    ORDER BY (c.schedule_time < NOW()) ASC,
+    (slots_filled >= c.capacity) ASC,
+    c.schedule_time ASC
 ")->fetchAll(PDO::FETCH_ASSOC);
 
 
@@ -219,6 +221,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['class_name'])) {
                             $slotsLeft = $class['capacity'] - $class['slots_filled'];
                             $fillPercent = $class['capacity'] > 0 ? round(($class['slots_filled'] / $class['capacity']) * 100) : 0;
 
+                            // closed class
+                            $isClosed = strtotime($class['schedule_time']) < time();
+
                             $barColor = 'bg-success';
                             if ($fillPercent >= 90) {
                                 $barColor = 'bg-danger';
@@ -227,13 +232,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['class_name'])) {
                             } 
 
                             $isFull = $slotsLeft <= 0;
+
+                            if ($isClosed) {
+                                $badgeClass = 'badge-closed';
+                                $badgeText = 'Closed';
+                            } else if ($isFull) {
+                                $badgeClass = 'badge-full';
+                                $badgeText = 'Full';
+                            } else {
+                                $badgeClass = 'badge-open';
+                                $badgeText = 'Open';
+                            }
                         ?>
                             <div class="class-card p-4">
                                 <!-- class name and status badge -->
                                 <div class="d-flex justify-content-between name-badge">
                                     <p class="fw-bold fs-3 m-0"><?= htmlspecialchars($class['class_name']) ?></p>
-                                    <span class="p-2 px-3 badge rounded-pill align-content-center <?= $isFull ? 'badge-full' : 'badge-open' ?>">
-                                        <?= $isFull ? 'Full' : 'Open' ?>
+                                    <span class="p-2 px-3 badge rounded-pill align-content-center <?= $badgeClass ?>">
+                                        <?= $badgeText ?>
                                     </span>
                                 </div>
 

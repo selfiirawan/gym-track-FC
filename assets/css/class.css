@@ -71,6 +71,11 @@
     color: #ef5350;
 }
 
+.badge-closed {
+    background: rgba(158, 158, 158, 0.2);
+    color: #9e9e9e;
+}
+
 /* progress bar */
 .bg-success {
     background-image: linear-gradient(to right, #1ad55b, #1bc265, #27af6b, #359c6d, #42896b);
