@@ -220,19 +220,24 @@ Mostly on the backend and the SQL queries
 
 ---
 
-## Day 10 — Date: ____
+## Day 10 — Date: 08/10/2026
 
 ### What I planned to do today
-
+- Fix a big issue: members I added were not automatically added to the `users` table, so they couldn't log in to the system.
+- Start the dashboard for logged-in members.
 
 ### What I actually did
-
+- Solved the issue. Every new member is now also added to the `users` table and can log in.
+- Completed the dashboard for members.
 
 ### Blockers / Challenges
-
+Data modelling: deciding where each piece of information should live, and what happens to the other pages if I move it.
 
 ### What I learned
-
+- Detecting duplicates automatically with `if ($e->getCode() == 23000)`.
+- Linking tables with a foreign key: adding `members.user_id` ties one login to one membership. This is more reliable than matching by email, because the link doesn't break if an email changes.
+- Weighing a clean redesign against a risky one: removing `name`/`email` from `members` looked tidier, but nearly every page I built reads those columns. Keeping them and adding `user_id` gave the same result with far less to break.
+- Keeping two tables in sync: Edit updates both tables, and Delete removes the `members` row first and then the `users` row, because of the foreign key.
 
 ---
 
