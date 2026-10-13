@@ -76,6 +76,11 @@ input::placeholder {
     border: 1px solid white !important;
 }
 
+/* buttons */
+.login-btn {
+    font-size: 1.2rem;
+}
+
 /* mobile view */
 @media (max-width:768px) {
     .app-container {

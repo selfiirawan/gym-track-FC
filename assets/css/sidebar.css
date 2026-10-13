@@ -52,10 +52,11 @@ a {
 }
 
 .sidebar a:hover, .active a {
-    background-color: #b8bcc3;
+    /* background-color: #b8bcc3; */
+    background-color: #FFFFFF;
+    color: #000;
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
-    border-left: 6px solid gray;
 }
 
 .sidebar a:hover span, .sidebar a:hover i, .active a span, .active a .bi {
