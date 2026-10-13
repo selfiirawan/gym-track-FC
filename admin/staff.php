@@ -401,12 +401,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         const status = document.getElementById('status');
         const leaveDates = document.getElementById('leaveDates');
 
-        status.addEventListener('change', function () {
-            leaveDates.style.display = this.value === 'on_leave' ? 'flex' : 'none';
-        });
+        function toggleLeaveDates() {
+            if (status.value == 'on_leave') {
+                leaveDates.style.display = 'flex';
+            }  else {
+                leaveDates.style.display = 'none';
+            }
+        }
 
-        if (status.value === 'on_leave') {
-            leaveDates.style.display = 'flex';
+        if (status && leaveDates) {
+            status.addEventListener('change', toggleLeaveDates);
+            toggleLeaveDates();
         }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>

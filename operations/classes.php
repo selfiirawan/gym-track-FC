@@ -29,28 +29,34 @@ if (isset($_GET['error']) && $_GET['error'] === 'duplicate') {
 
 if (isset($_POST['member_id']) && isset($_POST['class_id'])) {
 
+    $memberId = $_POST['member_id'];
+    $classId = $_POST['class_id'];
+
     // check duplicates
     $check = $db->prepare("SELECT booking_id FROM class_bookings WHERE member_id = ? AND class_id = ? AND status = 'booked'");
-    $check->execute([$_POST['member_id'], $_POST['class_id']]);
+    $check->execute([$memberId, $classId]);
 
     if ($check->fetch()) {
         // has duplicate
-        header('Location: /classes?manage=' . $_POST['class_id'] . '&error=duplicate');
+        header('Location: /classes?manage=' . $classId . '&error=duplicate');
         exit;
     } else {
         // no duplicate - add to booked
         $insert = $db->prepare("INSERT INTO class_bookings (member_id, class_id, status) VALUES (?, ?, 'booked')");
-        $insert->execute([$_POST['member_id'], $_POST['class_id']]);
-        header('Location: /classes?manage=' . $_POST['class_id']);
+        $insert->execute([$memberId, $classId]);
+        header('Location: /classes?manage=' . $classId);
         exit;
     }
 }
 
 // remove booking 
 if (isset($_POST['cancel_id'])) {
+    $cancelId = $_POST['cancel_id'];
+    $classId = $_POST['class_id'];
+
     $cancel = $db->prepare("UPDATE class_bookings SET status = 'cancelled' WHERE booking_id = ?");
-    $cancel->execute([$_POST['cancel_id']]);
-    header('Location: /classes?manage=' . $_POST['class_id']);
+    $cancel->execute([$cancelId]);
+    header('Location: /classes?manage=' . $classId);
     exit;
 }
 
@@ -350,14 +356,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['class_name'])) {
 
                                             <!-- booked member -->
                                             <?php 
-                                            $bookedStmt = $db->prepare("
-                                                SELECT cb.booking_id, m.name, m.contact, m.email
-                                                FROM class_bookings cb
-                                                JOIN members m ON m.member_id = cb.member_id
-                                                WHERE cb.class_id = ? AND cb.status = 'booked' 
-                                            ");
-                                            $bookedStmt->execute([$class['class_id']]);
-                                            $bookedMembers = $bookedStmt->fetchAll(PDO::FETCH_ASSOC);
+                                                $bookedStmt = $db->prepare("
+                                                    SELECT cb.booking_id, m.name, m.contact, m.email
+                                                    FROM class_bookings cb
+                                                    JOIN members m ON m.member_id = cb.member_id
+                                                    WHERE cb.class_id = ? AND cb.status = 'booked' 
+                                                ");
+                                                $bookedStmt->execute([$class['class_id']]);
+                                                $bookedMembers = $bookedStmt->fetchAll(PDO::FETCH_ASSOC);
                                             ?>
 
                                             <p class="m-0 mt-3 mb-2 fw-bold text-secondary ps-1">Booked members</p>
